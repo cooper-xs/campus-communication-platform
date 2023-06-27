@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comments } from "./Comments";
 import { Messages } from "./Messages";
 import { Posts } from "./Posts";
@@ -6,7 +6,7 @@ import { Registrations } from "./Registrations";
 
 @Entity("students", { schema: "ccp" })
 export class Students {
-  @Column("int", { primary: true, name: "StudentID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "StudentID" })
   studentId: number;
 
   @Column("varchar", { name: "NickName", length: 255 })

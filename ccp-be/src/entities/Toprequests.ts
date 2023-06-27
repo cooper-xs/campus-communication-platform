@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Posts } from "./Posts";
 import { Administrators } from "./Administrators";
 
@@ -6,7 +13,7 @@ import { Administrators } from "./Administrators";
 @Index("toprequests_ibfk_2", ["adminId"], {})
 @Entity("toprequests", { schema: "ccp" })
 export class Toprequests {
-  @Column("int", { primary: true, name: "RequestID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "RequestID" })
   requestId: number;
 
   @Column("int", { name: "PostID", nullable: true })

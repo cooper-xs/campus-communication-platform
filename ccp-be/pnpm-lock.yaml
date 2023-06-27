@@ -45,6 +45,12 @@ devDependencies:
   '@types/jsonwebtoken':
     specifier: ^9.0.2
     version: registry.npmmirror.com/@types/jsonwebtoken@9.0.2
+  '@types/koa':
+    specifier: ^2.13.6
+    version: registry.npmmirror.com/@types/koa@2.13.6
+  '@types/koa-bodyparser':
+    specifier: ^4.3.10
+    version: registry.npmmirror.com/@types/koa-bodyparser@4.3.10
   '@types/koa-static':
     specifier: ^4.0.2
     version: registry.npmmirror.com/@types/koa-static@4.0.2
@@ -358,6 +364,14 @@ packages:
     resolution: {integrity: sha512-GJhpTepz2udxGexqos8wgaBx4I/zWIDPh/KOGEwAqtuGDkOUJu5eFvwmdBX4AmB8Odsr+9pHCQqiAqDL/yKMKw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/keygrip/-/keygrip-1.0.2.tgz}
     name: '@types/keygrip'
     version: 1.0.2
+    dev: true
+
+  registry.npmmirror.com/@types/koa-bodyparser@4.3.10:
+    resolution: {integrity: sha512-6ae05pjhmrmGhUR8GYD5qr5p9LTEMEGfGXCsK8VaSL+totwigm8+H/7MHW7K4854CMeuwRAubT8qcc/EagaeIA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/koa-bodyparser/-/koa-bodyparser-4.3.10.tgz}
+    name: '@types/koa-bodyparser'
+    version: 4.3.10
+    dependencies:
+      '@types/koa': registry.npmmirror.com/@types/koa@2.13.6
     dev: true
 
   registry.npmmirror.com/@types/koa-compose@3.2.5:

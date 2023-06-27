@@ -1,8 +1,8 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("authentications", { schema: "ccp" })
 export class Authentications {
-  @Column("int", { primary: true, name: "UserID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "UserID" })
   userId: number;
 
   @Column("varchar", { name: "UserName", nullable: true, length: 255 })

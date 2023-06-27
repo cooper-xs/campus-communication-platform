@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Posts } from "./Posts";
 import { Administrators } from "./Administrators";
 
@@ -6,7 +13,7 @@ import { Administrators } from "./Administrators";
 @Index("ReviewerID", ["adminId"], {})
 @Entity("postmoderation", { schema: "ccp" })
 export class Postmoderation {
-  @Column("int", { primary: true, name: "ModerationID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "ModerationID" })
   moderationId: number;
 
   @Column("int", { name: "PostID", nullable: true })

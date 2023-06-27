@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Teachers } from "./Teachers";
 import { Registrations } from "./Registrations";
@@ -13,7 +14,7 @@ import { Videos } from "./Videos";
 @Index("TeacherID", ["teacherId"], {})
 @Entity("activities", { schema: "ccp" })
 export class Activities {
-  @Column("int", { primary: true, name: "ActivityID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "ActivityID" })
   activityId: number;
 
   @Column("int", { name: "TeacherID", nullable: true })

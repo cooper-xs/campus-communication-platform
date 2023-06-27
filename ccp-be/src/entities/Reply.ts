@@ -1,10 +1,17 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Comments } from "./Comments";
 
 @Index("comment", ["commentId"], {})
 @Entity("reply", { schema: "ccp" })
 export class Reply {
-  @Column("int", { name: "ReplyID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "ReplyID" })
   replyId: number;
 
   @Column("int", { name: "CommentID" })

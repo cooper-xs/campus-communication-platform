@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Students } from "./Students";
 import { Activities } from "./Activities";
 
@@ -6,7 +13,7 @@ import { Activities } from "./Activities";
 @Index("StudentID", ["studentId"], {})
 @Entity("registrations", { schema: "ccp" })
 export class Registrations {
-  @Column("int", { primary: true, name: "RegistrationID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "RegistrationID" })
   registrationId: number;
 
   @Column("int", { name: "StudentID", nullable: true })

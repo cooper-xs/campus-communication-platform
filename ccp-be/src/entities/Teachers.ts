@@ -1,10 +1,10 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Activities } from "./Activities";
 import { Videos } from "./Videos";
 
 @Entity("teachers", { schema: "ccp" })
 export class Teachers {
-  @Column("int", { primary: true, name: "TeacherID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "TeacherID" })
   teacherId: number;
 
   @Column("varchar", { name: "NickName", length: 255 })

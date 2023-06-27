@@ -1,10 +1,10 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Postmoderation } from "./Postmoderation";
 import { Toprequests } from "./Toprequests";
 
 @Entity("administrators", { schema: "ccp" })
 export class Administrators {
-  @Column("int", { primary: true, name: "AdminID" })
+  @PrimaryGeneratedColumn({ type: "int", name: "AdminID" })
   adminId: number;
 
   @Column("varchar", { name: "Name", nullable: true, length: 255 })

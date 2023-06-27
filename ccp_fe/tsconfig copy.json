@@ -1,0 +1,11 @@
+{
+//   "files": ["src/utils/Http.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}

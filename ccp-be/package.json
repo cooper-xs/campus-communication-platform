@@ -30,9 +30,11 @@
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
+    "ali-oss": "^6.17.1",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.1",
     "koa-jwt": "^4.0.4",
+    "koa-multer": "^1.0.2",
     "koa-session": "^6.4.0",
     "koa-static": "^5.0.0",
     "mysql2": "^3.4.0",

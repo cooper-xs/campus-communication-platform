@@ -29,6 +29,12 @@ export class Activities {
   @Column("datetime", { name: "CreationTime", nullable: true })
   creationTime: Date | null;
 
+  @Column("datetime", { name: "BeginTime", nullable: true })
+  beginTime: Date | null;
+
+  @Column("datetime", { name: "EndTime", nullable: true })
+  endTime: Date | null;
+
   @Column("int", { name: "VideoID", nullable: true })
   videoId: number | null;
 

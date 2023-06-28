@@ -12,4 +12,11 @@ export default class TeacherService {
     });
     return teacher;
   }
+
+  public async findTeacherById(teacherId: number) {
+    const teacher = await TeachersRepository.findOne({
+      where: { teacherId },
+    });
+    return teacher;
+  }
 }

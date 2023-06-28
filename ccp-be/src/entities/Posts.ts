@@ -30,7 +30,12 @@ export class Posts {
   @Column("datetime", { name: "CreationTime", nullable: true })
   creationTime: Date | null;
 
-  @Column("tinyint", { name: "PinnedState", nullable: true, width: 1 })
+  @Column("tinyint", {
+    name: "PinnedState",
+    nullable: true,
+    comment: "0: 未审核, 1:审核已通过, 2:审核未通过, 3:过期清理等状态",
+    width: 1,
+  })
   pinnedState: boolean | null;
 
   @OneToMany(() => Comments, (comments) => comments.post)

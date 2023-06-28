@@ -25,3 +25,11 @@ export interface LoginForm {
   password: string;
   type: string;
 }
+
+export interface NewActivityForm {
+  title: string;
+  description: string;
+  beginTime: Date;
+  endTime: Date;
+  videoPath: string;
+}

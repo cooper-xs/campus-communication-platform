@@ -61,6 +61,7 @@ class Http {
     } else {
       throw new Error('HTTP错误: ' + response.status);
     }
+    return null as unknown as T;
   }
 }
 

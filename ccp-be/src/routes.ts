@@ -4,8 +4,16 @@ import LoginController from './controller/LoginController';
 import PostController from './controller/PostController'
 import { IRoute } from './types';
 import StudentController from './controller/StudentController';
+import ActivityController from './controller/ActivityController';
+import TeacherController from './controller/TeacherController';
 
 const routes: IRoute[] = [
+  {
+    method: 'post',
+    path: '/upload',
+    controller: ActivityController,
+    action: 'upload',
+  },
   {
     method: 'post',
     path: '/login',
@@ -18,6 +26,20 @@ const routes: IRoute[] = [
     controller: LoginController,
     action: 'register',
   },
+  {
+    method: 'get',
+    path: '/getStudentById',
+    controller: StudentController,
+    action: 'findStudentById',
+  },
+  {
+    method: 'get',
+    path: '/getTeacherById',
+    controller: TeacherController,
+    action: 'findTeacherById',
+  },
+
+  // 帖子
   {
     method: 'post',
     path: '/addPost',
@@ -38,11 +60,20 @@ const routes: IRoute[] = [
     controller: PostController,
     action: 'getPostsAsPage',
   },
+
+
+  // 活动
   {
     method: 'get',
-    path: '/getStudentById',
-    controller: StudentController,
-    action: 'findStudentById',
+    path: '/getActivities',
+    controller: ActivityController,
+    action: 'getActivities',
+  },
+  {
+    method: 'get',
+    path: '/getActivity',
+    controller: ActivityController,
+    action: 'getActivity',
   }
 ];
 

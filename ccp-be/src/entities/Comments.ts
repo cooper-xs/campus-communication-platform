@@ -11,8 +11,8 @@ import { Students } from "./Students";
 import { Posts } from "./Posts";
 import { Reply } from "./Reply";
 
-@Index("PostID", ["postId"], {})
 @Index("UserID", ["userId"], {})
+@Index("PostID", ["postId"], {})
 @Entity("comments", { schema: "ccp" })
 export class Comments {
   @PrimaryGeneratedColumn({ type: "int", name: "CommentID" })

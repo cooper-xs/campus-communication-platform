@@ -6,14 +6,30 @@ export default class ActivitiesService {
     this.ctx = ctx;
   }
 
-  public async findActivityById(id: string) {
+  public async upload() {
+    
+  }
+
+  public async findActivityById(activityId: string) {
     const activity = await ActivitiesRepository.findOne({
       where: {
-        id,
+        activityId,
       },
     });
     return activity;
   }
 
-  
+  public async getActivities() {
+    const activities = await ActivitiesRepository.find();
+    return activities;
+  }
+
+  public async getActivitiesByTeacherId(teacherId: string) {
+    const activities = await ActivitiesRepository.find({
+      where: {
+        teacherId,
+      },
+    });
+    return activities;
+  }
 }

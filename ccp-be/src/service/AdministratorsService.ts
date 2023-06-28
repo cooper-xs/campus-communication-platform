@@ -12,4 +12,11 @@ export default class AdministratorsService {
     });
     return administrator;
   }
+
+  public async findAdministratorById(adminId: number) {
+    const administrator = await AdministratorsRepository.findOne({
+      where: { adminId },
+    });
+    return administrator;
+  }
 }

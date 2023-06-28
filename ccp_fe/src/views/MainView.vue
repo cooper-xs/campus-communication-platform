@@ -3,7 +3,9 @@
     <el-header class="header">
       <div class="logo">校园交流平台</div>
       <div v-if="userType" class="user-info">
-        <el-button type="text" class="text-white" @click="router.push('/')">{{ student.nickName }}</el-button>
+        <el-button v-if="student.studentId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName }} 同学</el-button>
+        <el-button v-if="teacher.teacherId" type="text" class="text-white mr-4" @click="router.push('/')">{{ teacher.nickName }} 老师</el-button>
+        <el-button v-if="admin.adminId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName }}</el-button>
         <el-button type="text" class="text-white" @click="logout">退出</el-button>
       </div>
       <div v-else class="user-actions">
@@ -13,14 +15,14 @@
 
     <el-container>
       <el-aside class="aside">
-        <el-menu :default-active="$route.path">
-          <el-menu-item index="/posts">
-            <i class="el-icon-document"></i>
-            <span>帖子</span>
-          </el-menu-item>
+        <el-menu :default-active="1" @select="handleMenuSelect">
           <el-menu-item index="/activities">
             <i class="el-icon-date"></i>
             <span>活动</span>
+          </el-menu-item>
+          <el-menu-item index="/posts">
+            <i class="el-icon-document"></i>
+            <span>帖子</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -50,14 +52,38 @@ const student = ref({
   pid: '',
 })
 
+const teacher = ref({
+  teacherId: '',
+  nickName: '',
+  name: '',
+  email: '',
+  password: '',
+  academy: '',
+  pid: '',
+})
+
+const admin = ref({
+  adminId: '',
+  name: '',
+  email: '',
+  password: '',
+  role: '',
+})
+
 onMounted(async () => {
   userType.value = localStorage.getItem('userType') || '';
   if (userType.value === 'student') {
     student.value.studentId = localStorage.getItem('userId') || '';
-    // console.log('查询参数', student.value.studentId);
     student.value = await Http.get('/getStudentById', { params: { studentId: student.value.studentId } });
-    // console.log('查询结果', student.value);
-
+    console.log(student.value);
+  } else if (userType.value === 'teacher') {
+    teacher.value.teacherId = localStorage.getItem('userId') || '';
+    teacher.value = await Http.get('/getTeacherById', { params: { teacherId: teacher.value.teacherId } });
+    console.log(teacher.value);
+  } else if (userType.value === 'admin') {
+    admin.value.adminId = localStorage.getItem('userId') || '';
+    admin.value = await Http.get('/getAdminById', { params: { adminId: admin.value.adminId } });
+    console.log(admin.value);
   }
 });
 
@@ -72,6 +98,10 @@ const logout = () => {
   userType.value = '';
   // router.push('/');
 };
+
+function handleMenuSelect(index: string) {
+  router.push('/home' + index);
+}
 </script>
 
 <style scoped>

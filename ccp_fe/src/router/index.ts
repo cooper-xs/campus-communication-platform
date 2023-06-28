@@ -1,16 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router';
-// import Main from '../views/MainView.vue';
 import Main from '@/views/MainView.vue';
-// import a from '@/views/test';
-import a from '../views/test';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
+      redirect: '/home',
+    },
+    {
+      path: '/home',
       component: Main,
+      children: [
+        {
+          path: 'activities',
+          name: 'Activities',
+          component: () => import('@/components/Activities.vue'),
+        },
+        {
+          path: 'activity/:id',
+          name: 'ActivityDetail',
+          component: () => import('@/components/ActivityDetail.vue'),
+        },
+        {
+          path: 'addActivity',
+          name: 'AddActivity',
+          component: () => import('@/components/AddActivity.vue'),
+        },
+        {
+          path: 'posts',
+          name: 'Posts',
+          component: () => import('@/components/Posts.vue'),
+        },
+      ],
     },
     {
       path: '/login',
@@ -18,7 +40,7 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
       meta: {
         title: '登录',
-      }
+      },
     },
     {
       path: '/register',
@@ -26,7 +48,7 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue'),
       meta: {
         title: '注册',
-      }
+      },
     },
     {
       path: '/:pathMatch(.*)*',
@@ -34,7 +56,7 @@ const router = createRouter({
       component: () => import('@/views/NotFound.vue'),
       meta: {
         title: '这页面不对吧??',
-      },  
+      },
     },
   ],
 });
@@ -43,13 +65,7 @@ router.beforeEach((to, from, next) => {
   // 设置页面标题
   document.title = to.meta.title ? to.meta.title + ' | 校园交流平台' : '校园交流平台';
 
-  // 检查是否需要登录
-  // const isLoggedIn = useAdminStore().isLoggedIn || localStorage.getItem('isLoggedIn') === 'true';
-  // if (to.path.startsWith('/admin') && !isLoggedIn) {
-  //   next('/login');
-  // } else {
-  //   next();
-  // }
+  next();
 });
 
 export default router;

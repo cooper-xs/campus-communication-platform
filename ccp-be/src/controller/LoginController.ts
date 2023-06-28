@@ -2,6 +2,7 @@ import { Context } from "koa";
 import AdministratorsService from "../service/AdministratorsService";
 import StudentsService from "../service/StudentsService";
 import TeacherService from "../service/TeachersService";
+import { tool } from "../utils/tool";
 
 export default class LoginController {
   private readonly _administratorsService = new AdministratorsService(this.ctx);
@@ -13,18 +14,16 @@ export default class LoginController {
   }
 
   public async login() {
-    const {
-      email,
-      password,
-      type,
-    } = this.ctx.request.body as {
+    const { email, password, type } = this.ctx.request.body as {
       email: string;
       password: string;
       type: string;
     };
 
     if (type === "admin") {
-      const admin = await this._administratorsService.findAdministratorByEmail(email);
+      const admin = await this._administratorsService.findAdministratorByEmail(
+        email
+      );
       if (admin) {
         if (admin.password === password) {
           return admin;
@@ -45,7 +44,7 @@ export default class LoginController {
       } else {
         this.ctx.status = 404;
       }
-    } else if(type === "student") {
+    } else if (type === "student") {
       const student = await this._studentsService.findStudentByEmail(email);
       if (student) {
         if (student.password === password) {
@@ -60,5 +59,47 @@ export default class LoginController {
       this.ctx.status = 400;
     }
     return null;
+  }
+
+  public async register() {
+    let {
+      email,
+      password,
+      // type,
+      name,
+      nickname,
+      grade,
+      class: class_,
+      pid,
+    } = this.ctx.request.body as {
+      name: string;
+      nickname: string;
+      email: string;
+      password: string;
+      grade: number;
+      class: string;
+      pid: string;
+      // type: string;
+    };
+
+    grade = tool.toNumber(grade);
+
+    const student = await this._studentsService.findStudentByEmail(email);
+
+    if (student) {
+      this.ctx.status = 409;
+    }
+
+    const newStudent = await this._studentsService.addStudent({
+      name,
+      nickName: nickname,
+      email,
+      password,
+      grade,
+      class: class_,
+      pid,
+    });
+
+    return newStudent;
   }
 }

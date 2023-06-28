@@ -3,6 +3,7 @@ import { Context, Next } from 'koa';
 import LoginController from './controller/LoginController';
 import PostController from './controller/PostController'
 import { IRoute } from './types';
+import StudentController from './controller/StudentController';
 
 const routes: IRoute[] = [
   {
@@ -10,6 +11,12 @@ const routes: IRoute[] = [
     path: '/login',
     controller: LoginController,
     action: 'login',
+  },
+  {
+    method: 'post',
+    path: '/register',
+    controller: LoginController,
+    action: 'register',
   },
   {
     method: 'post',
@@ -23,12 +30,19 @@ const routes: IRoute[] = [
     path: '/reviewPost',
     controller: PostController,
     action: 'reviewPost',
+    // needLogin: true,
   },
   {
     method: 'get',
     path: '/getPostsAsPage',
     controller: PostController,
     action: 'getPostsAsPage',
+  },
+  {
+    method: 'get',
+    path: '/getStudentById',
+    controller: StudentController,
+    action: 'findStudentById',
   }
 ];
 

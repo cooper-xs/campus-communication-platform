@@ -9,3 +9,19 @@ export interface ApiResponse<T> {
 export interface MyAxiosConfig extends AxiosRequestConfig {
   method: 'get' | 'post' | 'put' | 'delete';
 }
+
+export interface RegisterForm {
+  name: string;
+  nickname: string;
+  email: string;
+  password: string;
+  grade: number;
+  class: string;
+  pid: string;
+}
+
+export interface LoginForm {
+  email: string;
+  password: string;
+  type: string;
+}

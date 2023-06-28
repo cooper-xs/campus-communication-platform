@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <el-form ref="loginForm" :model="loginForm" label-position="top" class="login-form">
+    <el-form :model="loginForm" label-position="top" class="login-form">
       <h2 class="title">登录</h2>
-      <el-select v-model="loginForm.userType" placeholder="请选择身份" class="user-type">
-        <el-option label="管理员" value="admin"></el-option>
-        <el-option label="老师" value="teacher"></el-option>
-        <el-option label="学生" value="student"></el-option>
-      </el-select>
+      <el-form-item label="身份" prop="type">
+        <el-select v-model="loginForm.type" placeholder="请选择身份">
+          <el-option v-for="userType in userTypes" :key="userType" :label="userType" :value="userType"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="loginForm.email" placeholder="请输入邮箱"></el-input>
       </el-form-item>
@@ -16,33 +16,68 @@
       <el-form-item>
         <el-button type="primary" @click="submitForm()">登录</el-button>
         <el-button @click="register">注册</el-button>
+        <el-button @click="router.push('/')">返回主页</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import router from '@/router';
 import Http from '@/utils/Http';
+import type { LoginForm } from '@/types';
+import ElMessage from "element-plus/lib/components/message/index.js";
 
 const submitLoading = ref(false);
 
-const loginForm = ref({
-  userType: "",
+const userTypes = ["管理员", "老师", "学生"]
+
+const initLoginForm: LoginForm = {
+  type: "",
   email: "",
   password: "",
-});
+};
+
+const loginForm = reactive({ ...initLoginForm })
 
 async function submitForm() {
-  if(submitLoading.value) {
+  if (submitLoading.value) {
     return;
   }
   submitLoading.value = true;
 
-  const user = await Http.post('/login');
-
-  submitLoading.value = false;
+  try {
+    const loginParams = {
+      ...loginForm,
+    };
+    if (loginForm.type === "管理员") {
+      loginParams.type = "admin";
+    } else if (loginForm.type === "老师") {
+      loginParams.type = "teacher";
+    } else if (loginForm.type === "学生") {
+      loginParams.type = "student";
+    }
+    const user = await Http.post('/login', loginParams) as any;
+    if(user) {
+      localStorage.setItem("userType", loginParams.type);
+      if(loginForm.type === "管理员") {
+        localStorage.setItem("userId", user.adminId);
+      } else if(loginForm.type === "老师") {
+        localStorage.setItem("userId", user.teacherId);
+      } else if(loginForm.type === "学生") {
+        localStorage.setItem("userId", user.studentId);
+      }
+      router.push("/");
+      ElMessage.success("登录成功");
+    } else {
+      ElMessage.error("登录失败");
+    }
+  } catch {
+    ElMessage.error("登录失败");
+  } finally {
+    submitLoading.value = false;
+  }
 }
 
 function register() {
@@ -60,7 +95,10 @@ function register() {
 }
 
 .login-form {
-  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
   padding: 50px;
   background-color: #fff;
   border-radius: 10px;
@@ -72,6 +110,10 @@ function register() {
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
+}
+
+.el-form-item {
+  width: 100%; // 新添加的样式
 }
 
 .user-type {

@@ -65,12 +65,12 @@ export default class LoginController {
     let {
       email,
       password,
-      // type,
       name,
       nickname,
       grade,
       class: class_,
       pid,
+      academy,
     } = this.ctx.request.body as {
       name: string;
       nickname: string;
@@ -79,7 +79,7 @@ export default class LoginController {
       grade: number;
       class: string;
       pid: string;
-      // type: string;
+      academy: string;
     };
 
     grade = tool.toNumber(grade);
@@ -98,6 +98,8 @@ export default class LoginController {
       grade,
       class: class_,
       pid,
+      academy,
+      verified: 0,
     });
 
     return newStudent;

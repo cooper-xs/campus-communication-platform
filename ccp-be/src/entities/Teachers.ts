@@ -25,6 +25,9 @@ export class Teachers {
   @Column("varchar", { name: "PID", nullable: true, length: 255 })
   pid: string | null;
 
+  @Column("tinyint", { name: "Verified", nullable: true })
+  verified: number | null;
+
   @OneToMany(() => Activities, (activities) => activities.teacher)
   activities: Activities[];
 

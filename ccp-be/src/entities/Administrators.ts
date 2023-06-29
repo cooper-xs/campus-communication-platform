@@ -16,9 +16,6 @@ export class Administrators {
   @Column("varchar", { name: "Password", nullable: true, length: 255 })
   password: string | null;
 
-  @Column("varchar", { name: "Role", nullable: true, length: 255 })
-  role: string | null;
-
   @OneToMany(() => Postmoderation, (postmoderation) => postmoderation.admin)
   postmoderations: Postmoderation[];
 

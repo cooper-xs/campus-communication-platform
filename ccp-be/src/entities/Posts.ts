@@ -27,16 +27,20 @@ export class Posts {
   @Column("varchar", { name: "Content", nullable: true, length: 255 })
   content: string | null;
 
+  @Column("varchar", { name: "Post_img", nullable: true, length: 255 })
+  postImg: string | null;
+
   @Column("datetime", { name: "CreationTime", nullable: true })
   creationTime: Date | null;
 
   @Column("tinyint", {
-    name: "PinnedState",
+    name: "State",
     nullable: true,
-    comment: "0: 未审核, 1:审核已通过, 2:审核未通过, 3:过期清理等状态",
+    comment:
+      "0: 直接通过, 1: 需要审核, 2:审核已通过, 3:审核未通过, 4:草稿未发布",
     width: 1,
   })
-  pinnedState: boolean | null;
+  state: boolean | null;
 
   @OneToMany(() => Comments, (comments) => comments.post)
   comments: Comments[];

@@ -11,25 +11,6 @@ export interface IRoute {
   needLogin?: boolean;
 }
 
-declare namespace KoaMulter {
-  interface File {
-    filename: string;
-    originalname: string;
-    encoding: string;
-    mimetype: string;
-    destination: string;
-    path: string;
-    size: number;
-  }
-}
-
-declare module 'koa' {
-  interface Request {
-    file: KoaMulter.File;
-    files: KoaMulter.File[];
-  }
-}
-
 export interface newPost {
   userId: number;
   title: string;

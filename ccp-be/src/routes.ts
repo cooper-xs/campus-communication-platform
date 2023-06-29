@@ -6,6 +6,10 @@ import { IRoute } from './types';
 import StudentController from './controller/StudentController';
 import ActivityController from './controller/ActivityController';
 import TeacherController from './controller/TeacherController';
+import multer from "koa-multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).array('file', 5); // 最多上传5个文件
 
 const routes: IRoute[] = [
   {
@@ -81,9 +85,16 @@ const router = new Router();
 
 routes.forEach((route) => {
   const middlewares = [];
+  if(route.action === 'upload') {
+    middlewares.push(upload);
+  }
   router[route.method](route.path, ...middlewares, async (ctx: Context) => {
     // eslint-disable-next-line new-cap
     const controller = new route.controller(ctx);
+    if(route.action === 'upload') {
+      // @ts-ignore
+      return await controller[route.action](ctx.req.files);
+    }
     return await controller[route.action]();
   });
 });

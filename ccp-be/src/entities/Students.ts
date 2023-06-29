@@ -30,6 +30,17 @@ export class Students {
   @Column("varchar", { name: "PID", nullable: true, length: 255 })
   pid: string | null;
 
+  @Column("varchar", { name: "Academy", nullable: true, length: 255 })
+  academy: string | null;
+
+  @Column("tinyint", {
+    name: "Verified",
+    nullable: true,
+    comment: " 0: 未认证, 1:认证通过",
+    width: 1,
+  })
+  verified: boolean | null;
+
   @OneToMany(() => Comments, (comments) => comments.user)
   comments: Comments[];
 

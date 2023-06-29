@@ -24,12 +24,9 @@ const headers = {
 };
 
 export async function put(name: string, buffer: Buffer) {
-  // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
-  // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
   const result = await client.put(
-    "demo1.mp4",
-    path.normalize("D:\\temp\\demo.mp4"),
-    // 自定义headers
+    `ccp/${name}`,
+    buffer,
     { headers }
   );
   // console.log(result.url);

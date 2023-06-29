@@ -13,4 +13,7 @@ export class Authentications {
 
   @Column("varchar", { name: "UserType", nullable: true, length: 255 })
   userType: string | null;
+
+  @Column("varchar", { name: "Academy", nullable: true, length: 255 })
+  academy: string | null;
 }

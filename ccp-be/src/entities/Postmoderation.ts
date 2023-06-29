@@ -22,8 +22,13 @@ export class Postmoderation {
   @Column("int", { name: "AdminID", nullable: true })
   adminId: number | null;
 
-  @Column("varchar", { name: "ModerationStatus", nullable: true, length: 255 })
-  moderationStatus: string | null;
+  @Column("tinyint", {
+    name: "ModerationStatus",
+    nullable: true,
+    comment: "0: 审核为通过状态, 1: 审核为不通过状态, 2: 修改为待审核状态",
+    width: 1,
+  })
+  moderationStatus: boolean | null;
 
   @Column("datetime", { name: "ModerationTime", nullable: true })
   moderationTime: Date | null;

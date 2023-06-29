@@ -16,22 +16,9 @@
       </div>
     </el-header>
 
-    <!-- <el-container>
-      <el-aside class="aside">
-        <el-menu :default-active="1" @select="handleMenuSelect">
-          <el-menu-item index="/activities">
-            <i class="el-icon-date"></i>
-            <span>活动</span>
-          </el-menu-item>
-          <el-menu-item index="/posts">
-            <i class="el-icon-document"></i>
-            <span>帖子</span>
-          </el-menu-item>
-        </el-menu>
-      </el-aside> -->
     <el-container>
       <el-aside class="aside">
-        <el-menu :default-active="2" :default-openeds="['1', '2']" @select="handleMenuSelect">
+        <el-menu :default-active="2" :default-openeds="['1', '2', '3', '4']" @select="handleMenuSelect">
 
           <el-sub-menu index="1">
             <template #title>
@@ -102,7 +89,7 @@
             </el-menu-item-group>
           </el-sub-menu>
 
-          <el-sub-menu index="4">
+          <el-sub-menu v-if="admin.adminId !== ''" index="4">
             <template #title>
               <el-icon>
                 <Setting />

@@ -19,4 +19,9 @@ export default class TeacherService {
     });
     return teacher;
   }
+
+  public async updateTeacher(teacher: any) {
+    const result = await TeachersRepository.save(teacher);
+    return result;
+  }
 }

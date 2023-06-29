@@ -29,4 +29,9 @@ export default class StudentsService {
     });
     return student;
   }
+
+  public async updateStudent(student: any) {
+    const result = await StudentsRepository.save(student);
+    return result;
+  }
 }

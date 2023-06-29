@@ -32,6 +32,22 @@ const router = createRouter({
           name: 'Posts',
           component: () => import('@/components/Posts.vue'),
         },
+        {
+          path: 'profile',
+          name: 'Profile',
+          children: [
+            {
+              path: 'manage',
+              name: 'Manage',
+              component: () => import('@/components/Manage.vue'),
+            },
+            {
+              path: 'verify',
+              name: 'Verify',
+              component: () => import('@/components/Verify.vue'),
+            }
+          ]
+        }
       ],
     },
     {

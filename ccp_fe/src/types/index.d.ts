@@ -33,3 +33,7 @@ export interface NewActivityForm {
   endTime: Date;
   videoPath: string;
 }
+
+// export interface RoleProfile {
+
+// }

@@ -19,4 +19,9 @@ export default class AdministratorsService {
     });
     return administrator;
   }
+
+  public async updateAdministrator(administrator: any) {
+    const result = await AdministratorsRepository.save(administrator);
+    return result;
+  }
 }

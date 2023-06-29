@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import { Context, Next } from 'koa';
-import LoginController from './controller/LoginController';
+import IdentityController from './controller/IdentityController';
 import PostController from './controller/PostController'
 import { IRoute } from './types';
 import StudentController from './controller/StudentController';
@@ -24,16 +24,18 @@ const routes: IRoute[] = [
     controller: ActivityController,
     action: 'deleteVideo',
   },
+
+  // 个人信息
   {
     method: 'post',
     path: '/login',
-    controller: LoginController,
+    controller: IdentityController,
     action: 'login',
   },
   {
     method: 'post',
     path: '/register',
-    controller: LoginController,
+    controller: IdentityController,
     action: 'register',
   },
   {
@@ -47,6 +49,12 @@ const routes: IRoute[] = [
     path: '/getTeacherById',
     controller: TeacherController,
     action: 'findTeacherById',
+  },
+  {
+    method: 'post',
+    path: '/updateProfile',
+    controller: IdentityController,
+    action: 'updateProfile',
   },
 
   // 帖子

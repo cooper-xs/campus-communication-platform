@@ -2,18 +2,20 @@ import { Context } from "koa";
 import ActivitiesService from "../service/ActivitiesService";
 import { client, put } from "../utils/uploadAliOSS";
 import multer from "koa-multer";
+import VideosService from "../service/VideosService";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 export default class ActivityController {
   private readonly _activitiesService = new ActivitiesService(this.ctx);
+  private readonly _videosService = new VideosService(this.ctx);
 
   public constructor(private readonly ctx: Context) {
     this.ctx = ctx;
   }
 
-  public async upload(files: any) {
+  public async uploadMP4(files: any) {
     // console.log(files);
     console.log("资源上传开始");
     try {
@@ -35,6 +37,54 @@ export default class ActivityController {
     }
   }
 
+  public async addActivity() {
+    const { teacherId, title, description, beginTime, endTime } = this.ctx
+      .request.body as {
+      teacherId: string;
+      title: string;
+      description: string;
+      beginTime: Date;
+      endTime: Date;
+    };
+
+    const createTime = Date.now();
+    // todo
+  }
+
+  public async addVideo() {
+
+    const { teacherId, activityId, videoPath } = this.ctx.request.body as {
+      teacherId: string;
+      activityId: string;
+      videoPath: string;
+    };
+
+    const creationTime = new Date();
+
+    console.log(teacherId, activityId, videoPath);
+
+    const res = await this._videosService.addVideo({
+      teacherId,
+      activityId,
+      videoPath,
+      creationTime,
+    });
+
+    return res;
+  }
+
+  public async getVideosByActivityId() {
+    const activityId = this.ctx.query.activityId as string;
+    if (activityId) {
+      const videos = await this._videosService.getVideosByActivityId(
+        activityId
+      );
+      return videos;
+    } else {
+      this.ctx.status = 400;
+    }
+  }
+
   public async getActivities() {
     const teacherId = this.ctx.query.teacherId as string;
     if (teacherId) {
@@ -49,7 +99,6 @@ export default class ActivityController {
   }
 
   public async getActivity() {
-    console.log("getActivity");
     const activityId = this.ctx.query.activityId as string;
     if (activityId) {
       const activity = await this._activitiesService.findActivityById(

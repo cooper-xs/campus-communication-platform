@@ -7,12 +7,16 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'virtual:windi.css'
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
+// import 'vue-video-player/src/custom-theme.css'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
+app.use(VueVideoPlayer)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

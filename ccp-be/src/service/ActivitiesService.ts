@@ -6,8 +6,9 @@ export default class ActivitiesService {
     this.ctx = ctx;
   }
 
-  public async upload() {
-    
+  public async addActivity(activity: any) {
+    const newActivity = await ActivitiesRepository.save(activity);
+    return newActivity;
   }
 
   public async findActivityById(activityId: string) {

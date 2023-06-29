@@ -14,9 +14,9 @@ const upload = multer({ storage: storage }).array('file', 5); // 最多上传5�
 const routes: IRoute[] = [
   {
     method: 'post',
-    path: '/upload',
+    path: '/uploadMP4',
     controller: ActivityController,
-    action: 'upload',
+    action: 'uploadMP4',
   },
   {
     method: 'post',
@@ -78,6 +78,18 @@ const routes: IRoute[] = [
     path: '/getActivity',
     controller: ActivityController,
     action: 'getActivity',
+  },
+  {
+    method: 'post',
+    path: '/addVideo',
+    controller: ActivityController,
+    action: 'addVideo',
+  },
+  {
+    method: 'get',
+    path: '/getVideosByActivityId',
+    controller: ActivityController,
+    action: 'getVideosByActivityId',
   }
 ];
 
@@ -85,13 +97,13 @@ const router = new Router();
 
 routes.forEach((route) => {
   const middlewares = [];
-  if(route.action === 'upload') {
+  if(route.action === 'uploadMP4') {
     middlewares.push(upload);
   }
   router[route.method](route.path, ...middlewares, async (ctx: Context) => {
     // eslint-disable-next-line new-cap
     const controller = new route.controller(ctx);
-    if(route.action === 'upload') {
+    if(route.action === 'uploadMP4') {
       // @ts-ignore
       return await controller[route.action](ctx.req.files);
     }

@@ -3,8 +3,8 @@
     <el-header class="header">
       <div class="logo">校园交流平台</div>
       <div v-if="userType" class="user-info">
-        <el-button v-if="student.studentId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName }} 同学</el-button>
-        <el-button v-if="teacher.teacherId" type="text" class="text-white mr-4" @click="router.push('/')">{{ teacher.nickName }} 老师</el-button>
+        <el-button v-if="student.studentId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.name }} 同学</el-button>
+        <el-button v-if="teacher.teacherId" type="text" class="text-white mr-4" @click="router.push('/')">{{ teacher.name }} 老师</el-button>
         <el-button v-if="admin.adminId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName }}</el-button>
         <el-button type="text" class="text-white" @click="logout">退出</el-button>
       </div>
@@ -28,7 +28,7 @@
       </el-aside>
 
       <el-main>
-        <router-view></router-view>
+        <router-view :userType="userType" :student="student" :teacher="teacher" :admin="admin"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -47,9 +47,11 @@ const student = ref({
   name: '',
   email: '',
   password: '',
+  academy: '',
   grade: 0,
   class: '',
   pid: '',
+  verified: 0,
 })
 
 const teacher = ref({
@@ -60,6 +62,7 @@ const teacher = ref({
   password: '',
   academy: '',
   pid: '',
+  verified: 0,
 })
 
 const admin = ref({
@@ -67,7 +70,6 @@ const admin = ref({
   name: '',
   email: '',
   password: '',
-  role: '',
 })
 
 onMounted(async () => {

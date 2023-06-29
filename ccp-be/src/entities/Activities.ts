@@ -35,9 +35,6 @@ export class Activities {
   @Column("datetime", { name: "EndTime", nullable: true })
   endTime: Date | null;
 
-  @Column("int", { name: "VideoID", nullable: true })
-  videoId: number | null;
-
   @ManyToOne(() => Teachers, (teachers) => teachers.activities, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

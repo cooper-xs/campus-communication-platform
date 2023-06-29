@@ -24,4 +24,10 @@ export default class VideosService {
     });
     return videos;
   }
+
+  public async deleteVideo(videoId: string) {
+    console.log(videoId);
+    const res = await VideosRepository.delete(videoId);
+    return res;
+  }
 }

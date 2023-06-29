@@ -1,5 +1,22 @@
 <template>
   <div class="flex flex-col items-center justify-center p-4">
+    <el-card v-if="teacher?.teacherId === activity.teacherId" class="mb-4">
+      <div class="text-lg font-bold">
+        上传视频
+      </div>
+      <el-upload class="" drag action="/api/uploadMP4" multiple :on-success="handleUploadSuccess"
+        :on-error="handleUploadError">
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">
+          拖动到这里 或者 <em>点击上传</em>
+        </div>
+        <template #tip>
+          <div class="el-upload__tip">
+            仅允许上传H.264编码格式的MP4文件, 其他格式将不能正确播放
+          </div>
+        </template>
+      </el-upload>
+    </el-card>
     <el-card class="mb-4">
       <div class="flex justify-between items-center">
         <span class="text-lg font-bold">{{ activity.title }}</span>
@@ -19,25 +36,8 @@
           <source :src="video.videoPath" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <el-button type="danger">删除</el-button>
+        <el-button type="danger" @click="deleteVideo(video.videoId)">删除</el-button>
       </div>
-    </el-card>
-    <el-card v-if="teacher?.teacherId === activity.teacherId">
-      <div class="text-lg font-bold">
-        上传视频
-      </div>
-      <el-upload class="" drag action="/api/uploadMP4" multiple :on-success="handleUploadSuccess"
-        :on-error="handleUploadError">
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">
-          拖动到这里 或者 <em>点击上传</em>
-        </div>
-        <template #tip>
-          <div class="el-upload__tip">
-            仅允许上传H.264编码格式的MP4文件, 其他格式将不能正确播放
-          </div>
-        </template>
-      </el-upload>
     </el-card>
   </div>
 </template>
@@ -47,6 +47,7 @@ import { ref, onMounted } from 'vue';
 import Http from '@/utils/Http';
 import router from '@/router';
 import timeUsual from '@/utils/timeUsual';
+import ElMessage from 'element-plus/lib/components/message/index.js';
 // import VideoPlayer from './VideoPlayer.vue';
 
 const props = defineProps({
@@ -106,9 +107,16 @@ const handleUploadSuccess = async (response: any, file: File, fileList: File[]) 
   };
   await Http.post('/addVideo', videoParams);
   videos.value = await Http.get('/getVideosByActivityId', { params: { activityId: activity.value.activityId } });
+  ElMessage.success('上传成功');
 };
 
 const handleUploadError = (err: any, file: File, fileList: File[]) => {
-  console.error('上传失败：', err);
+  ElMessage.error('上传失败');
 };
+
+const deleteVideo = (videoId: string) => {
+  Http.post('/deleteVideo', { videoId });
+  videos.value = videos.value.filter((video: any) => video.videoId !== videoId);
+  ElMessage.success('删除成功');
+}
 </script>

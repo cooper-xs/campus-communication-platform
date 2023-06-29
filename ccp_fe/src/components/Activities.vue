@@ -9,13 +9,14 @@
       <el-table :data="activities" style="width: 100%" height="700">
         <el-table-column prop="title" label="活动名称" width="120">
           <template #default="{ row }">
-            <el-button link size="small" class="p-2" type="primary" @click="signUpActivity(row.activityId)">{{ row.title }}</el-button>
+            <el-button link size="small" class="p-2" type="primary" @click="viewActivity(row.activityId)">{{ row.title
+            }}</el-button>
           </template>
         </el-table-column>
         <!-- <el-table-column prop="description" label="活动描述"></el-table-column> -->
         <el-table-column label="活动描述">
           <template #default="{ row }">
-            <div class="description-ellipsis">{{ row.description.length > 100 ? row.description.substring(0, 98) + "......"
+            <div class="description-ellipsis">{{ row.description.length > 90 ? row.description.substring(0, 88) + "......"
               : row.description }}</div>
           </template>
         </el-table-column>
@@ -24,10 +25,7 @@
         <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
         <el-table-column label="操作">
           <template #default="{ row }">
-            <!-- <el-button link size="small" class="p-2" type="primary" @click="viewActivity(row.activityId)">查看详情</el-button> -->
-
-            <el-button v-if="userType === 'student'" link size="small" class="p-2"
-              @click="signUpActivity(row.activityId)">报名</el-button>
+            <el-button link size="small" class="p-2" type="primary" @click="signUpActivity(row.activityId)">报名</el-button>
 
             <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
               link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
@@ -40,6 +38,17 @@
       </el-table>
     </el-main>
   </el-container>
+  <el-dialog v-model="dialogVisible" title="Tips" width="30%" :before-close="handleClose">
+    <span>This is a message</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +56,7 @@ import { ref, onMounted } from "vue";
 import Http from "@/utils/Http";
 import router from "@/router";
 import timeDiff from '../utils/timeDiff'
+import { ElMessageBox } from "element-plus/lib/components/index.js";
 
 const props = defineProps({
   userType: {
@@ -63,6 +73,7 @@ const props = defineProps({
   }
 })
 const activities = ref([]);
+const dialogVisible = ref(false);
 
 onMounted(async () => {
   activities.value = await Http.get("/getActivities");
@@ -80,6 +91,16 @@ const viewActivity = (id: number) => {
 
 const signUpActivity = (id: number) => {
   // 这里你可能需要调用报名的API
+}
+
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('确定关闭?')
+    .then(() => {
+      done()
+    })
+    .catch(() => {
+      // catch error
+    })
 }
 
 const publishActivity = () => {

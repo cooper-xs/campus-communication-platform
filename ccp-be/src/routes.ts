@@ -20,6 +20,12 @@ const routes: IRoute[] = [
   },
   {
     method: 'post',
+    path: '/deleteVideo',
+    controller: ActivityController,
+    action: 'deleteVideo',
+  },
+  {
+    method: 'post',
     path: '/login',
     controller: LoginController,
     action: 'login',
@@ -90,7 +96,14 @@ const routes: IRoute[] = [
     path: '/getVideosByActivityId',
     controller: ActivityController,
     action: 'getVideosByActivityId',
-  }
+  },
+  {
+    method: 'post',
+    path: '/addActivity',
+    controller: ActivityController,
+    action: 'addActivity',
+  },
+
 ];
 
 const router = new Router();

@@ -37,6 +37,14 @@ export default class ActivityController {
     }
   }
 
+  public async deleteVideo() {
+    const { videoId } = this.ctx.request.body as {
+      videoId: string;
+    };
+    const res = await this._videosService.deleteVideo(videoId);
+    return res;
+  }
+
   public async addActivity() {
     const { teacherId, title, description, beginTime, endTime } = this.ctx
       .request.body as {
@@ -47,12 +55,21 @@ export default class ActivityController {
       endTime: Date;
     };
 
-    const createTime = Date.now();
-    // todo
+    const creationTime = new Date();
+
+    const res = await this._activitiesService.addActivity({
+      teacherId,
+      title,
+      description,
+      beginTime,
+      endTime,
+      creationTime,
+    });
+
+    return res;
   }
 
   public async addVideo() {
-
     const { teacherId, activityId, videoPath } = this.ctx.request.body as {
       teacherId: string;
       activityId: string;

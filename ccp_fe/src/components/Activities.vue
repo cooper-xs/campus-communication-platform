@@ -1,8 +1,8 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header class="flex flex-row justify-between">
       <h2 class="text-lg">活动列表</h2>
-      <el-button v-if="userType === 'teacher' || userType === 'admin'" size="mini"
+      <el-button v-if="userType === 'teacher' || userType === 'admin'" size="mini" type="primary" class="mr-5 my-auto"
         @click="publishActivity">发布活动</el-button>
     </el-header>
     <el-main>
@@ -25,8 +25,7 @@
         <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
         <el-table-column label="操作">
           <template #default="{ row }">
-            <el-button link size="small" class="p-2" type="primary"
-              @click="clickSignUp(row)">报名</el-button>
+            <el-button link size="small" class="p-2" type="primary" @click="clickSignUp(row)">报名</el-button>
 
             <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
               link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
@@ -110,21 +109,23 @@ const viewActivity = async (id: number) => {
 
 const clickSignUp = async (row: any) => {
   // dialogVisible = true, selectedActivity = row
-  if(!props.student) {
+  if (!props.student) {
     ElMessage.error('请先登录')
-    return ;
+    return;
   }
-  if(props.student.verified) {
+  if (props.student.verified) {
     ElMessage.error('请前往个人中心进行学生认证')
-    return ;
+    return;
   }
-  const signUpflag = await Http.get('/getSignUpFlag', { params: {
-    activityId: row.activityId,
-    studentId: props.student?.studentId,
-  }})
-  if(signUpflag) {
+  const signUpflag = await Http.get('/getSignUpFlag', {
+    params: {
+      activityId: row.activityId,
+      studentId: props.student?.studentId,
+    }
+  })
+  if (signUpflag) {
     ElMessage.info('您已经报名过该活动')
-    return ;
+    return;
   }
   dialogVisible.value = true;
   selectedActivity.value = row;

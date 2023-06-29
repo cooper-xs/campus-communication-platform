@@ -40,12 +40,14 @@ class Http {
     // 所有2xx的响应都会进入这里
     if(response.status >= 200 && response.status < 300) {
       const apiResponse = response.data;
-      if (apiResponse.code === 20000 && apiResponse.data) {
-        // console.log('success:', apiResponse.data);
-        return apiResponse.data;
-      } else if(!apiResponse) {
-        // console.log('success: code = 204');
-        return null as unknown as T;
+      if (apiResponse.code === 20000) {
+        if(apiResponse.data) {
+          console.log('success:', apiResponse.data);
+          return apiResponse.data;
+        } else {
+          console.log('success: code = 204 ~');
+          return null as unknown as T;
+        }
       } else {
         // 展示错误码和错误消息
         console.log('error:', apiResponse.code, apiResponse.message);

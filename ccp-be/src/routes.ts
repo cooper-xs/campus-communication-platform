@@ -103,7 +103,18 @@ const routes: IRoute[] = [
     controller: ActivityController,
     action: 'addActivity',
   },
-
+  {
+    method: 'post',
+    path: '/signUpActivity',
+    controller: ActivityController,
+    action: 'signUpActivity',
+  }, 
+  {
+    method: 'get',
+    path: '/getSignUpFlag',
+    controller: ActivityController,
+    action: 'getSignUpFlag',
+  }
 ];
 
 const router = new Router();

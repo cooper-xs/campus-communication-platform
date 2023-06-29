@@ -25,7 +25,8 @@
         <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
         <el-table-column label="操作">
           <template #default="{ row }">
-            <el-button link size="small" class="p-2" type="primary" @click="signUpActivity(row.activityId)">报名</el-button>
+            <el-button link size="small" class="p-2" type="primary"
+              @click="clickSignUp(row)">报名</el-button>
 
             <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
               link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
@@ -38,13 +39,22 @@
       </el-table>
     </el-main>
   </el-container>
-  <el-dialog v-model="dialogVisible" title="Tips" width="30%" :before-close="handleClose">
-    <span>This is a message</span>
+
+  <el-dialog v-model="dialogVisible" title="报名活动" width="30%" :before-close="handleClose" :z-index="1000">
+    <span>您确定要参加活动: {{ selectedActivity.title }} ?</span>
+    <el-table :data="personalInfo" style="width: 100%">
+      <el-table-column prop="item" label="" width="120"></el-table-column>
+      <el-table-column label="">
+        <template #default="{ row }">
+          <el-input v-model="row.info"></el-input>
+        </template>
+      </el-table-column>
+    </el-table>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
-          Confirm
+        <el-button @click="dialogVisible = false">取消报名</el-button>
+        <el-button type="primary" @click="signUpActivity()">
+          报名
         </el-button>
       </span>
     </template>
@@ -56,7 +66,7 @@ import { ref, onMounted } from "vue";
 import Http from "@/utils/Http";
 import router from "@/router";
 import timeDiff from '../utils/timeDiff'
-import { ElMessageBox } from "element-plus/lib/components/index.js";
+import { ElMessage, ElMessageBox } from "element-plus/lib/components/index.js";
 
 const props = defineProps({
   userType: {
@@ -74,6 +84,16 @@ const props = defineProps({
 })
 const activities = ref([]);
 const dialogVisible = ref(false);
+const selectedActivity = ref({} as any);
+const personalInfo = ref([
+  { item: "姓名", info: props.student?.name },
+  { item: "学号", info: props.student?.pid },
+  // { item: "年级", info: props.student?.grade },
+  // { item: "学院", info: props.student?.academy },
+  // { item: "班级", info: props.student?.class },
+  // { item: "邮箱", info: props.student?.email },
+  // { item: "电话", info: '' },
+]);
 
 onMounted(async () => {
   activities.value = await Http.get("/getActivities");
@@ -82,24 +102,62 @@ onMounted(async () => {
     activity.beginTime = timeDiff(activity.beginTime);
     activity.endTime = timeDiff(activity.endTime);
   });
-  console.log(activities.value);
 });
 
-const viewActivity = (id: number) => {
+const viewActivity = async (id: number) => {
   router.push(`/home/activity/${id}`);
 };
 
-const signUpActivity = (id: number) => {
-  // 这里你可能需要调用报名的API
+const clickSignUp = async (row: any) => {
+  // dialogVisible = true, selectedActivity = row
+  if(!props.student) {
+    ElMessage.error('请先登录')
+    return ;
+  }
+  if(props.student.verified) {
+    ElMessage.error('请前往个人中心进行学生认证')
+    return ;
+  }
+  const signUpflag = await Http.get('/getSignUpFlag', { params: {
+    activityId: row.activityId,
+    studentId: props.student?.studentId,
+  }})
+  if(signUpflag) {
+    ElMessage.info('您已经报名过该活动')
+    return ;
+  }
+  dialogVisible.value = true;
+  selectedActivity.value = row;
+};
+
+const signUpActivity = async () => {
+  personalInfo.value.forEach((info: any) => {
+    if (info.info === '') {
+      ElMessageBox.alert('请填写完整信息', '提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          dialogVisible.value = true;
+        }
+      });
+    }
+  })
+  const res = await Http.post('/signUpActivity', {
+    activityId: selectedActivity.value.activityId,
+    studentId: props.student?.studentId,
+  })
+  if (res) {
+    ElMessage.success('报名成功')
+    dialogVisible.value = false
+  } else {
+    ElMessage.error('报名失败')
+  }
 }
 
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('确定关闭?')
+  ElMessageBox.confirm('报名信息将不会被保存, 确定取消报名?', { confirmButtonText: '取消报名', cancelButtonText: '返回', })
     .then(() => {
       done()
-    })
-    .catch(() => {
-      // catch error
+      dialogVisible.value = false
     })
 }
 

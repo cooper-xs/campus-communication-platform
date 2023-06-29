@@ -3,6 +3,7 @@ import ActivitiesService from "../service/ActivitiesService";
 import { client, put } from "../utils/uploadAliOSS";
 import multer from "koa-multer";
 import VideosService from "../service/VideosService";
+import RegistrationsService from "../service/RegistrationsService";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -10,6 +11,7 @@ const upload = multer({ storage: storage });
 export default class ActivityController {
   private readonly _activitiesService = new ActivitiesService(this.ctx);
   private readonly _videosService = new VideosService(this.ctx);
+  private readonly _registrationService = new RegistrationsService(this.ctx);
 
   public constructor(private readonly ctx: Context) {
     this.ctx = ctx;
@@ -125,5 +127,29 @@ export default class ActivityController {
     } else {
       this.ctx.status = 400;
     }
+  }
+
+  public async signUpActivity() {
+    const { studentId, activityId } = this.ctx.request.body as {
+      studentId: string;
+      activityId: string;
+    };
+    const registrationTime = new Date();
+    const registration = {
+      studentId,
+      activityId,
+      registrationTime,
+    }
+    const res = await this._registrationService.singUpActivity(registration)
+    return res;
+  }
+
+  public async getSignUpFlag() {
+    const { studentId, activityId } = this.ctx.query as {
+      studentId: string;
+      activityId: string;
+    };
+    const res = await this._registrationService.getSignUpFlag(studentId, activityId);
+    return res;
   }
 }

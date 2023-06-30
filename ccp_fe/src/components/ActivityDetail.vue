@@ -73,7 +73,6 @@ const activity = ref({
   beginTime: '',
   endTime: '',
   creationTime: '',
-  // videoId: '',
 });
 const videos = ref([{
   videoId: '',

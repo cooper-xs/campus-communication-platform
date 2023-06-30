@@ -24,14 +24,14 @@ export class Students {
   @Column("int", { name: "Grade", nullable: true })
   grade: number | null;
 
+  @Column("varchar", { name: "Academy", nullable: true, length: 255 })
+  academy: string | null;
+
   @Column("varchar", { name: "Class", nullable: true, length: 255 })
   class: string | null;
 
   @Column("varchar", { name: "PID", nullable: true, length: 255 })
   pid: string | null;
-
-  @Column("varchar", { name: "Academy", nullable: true, length: 255 })
-  academy: string | null;
 
   @Column("tinyint", {
     name: "Verified",

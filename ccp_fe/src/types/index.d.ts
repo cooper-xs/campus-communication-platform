@@ -31,9 +31,4 @@ export interface NewActivityForm {
   description: string;
   beginTime: Date;
   endTime: Date;
-  videoPath: string;
 }
-
-// export interface RoleProfile {
-
-// }

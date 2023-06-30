@@ -152,4 +152,42 @@ export default class ActivityController {
     const res = await this._registrationService.getSignUpFlag(studentId, activityId);
     return res;
   }
+
+  public async updateActivity() {
+    const { activityId, title, description, beginTime, endTime } = this.ctx
+      .request.body as {
+      activityId: string;
+      title: string;
+      description: string;
+      beginTime: Date;
+      endTime: Date;
+    };
+    const res = await this._activitiesService.updateActivity({
+      activityId,
+      title,
+      description,
+      beginTime,
+      endTime,
+    });
+    return res;
+  }
+
+  public async getRegistrations() {
+    const activityId = this.ctx.query.activityId as string;
+    if (activityId) {
+      const registrations = await this._registrationService.getRegistrationsByActivityId(activityId);
+      return registrations;
+    } else {
+      this.ctx.status = 400;
+    }
+  }
+
+  public async reviewRegistration() {
+    const { registrationId, state } = this.ctx.request.body as {
+      registrationId: string;
+      state: string;
+    };
+    const res = await this._registrationService.reviewRegistration(registrationId, state);
+    return res;
+  }
 }

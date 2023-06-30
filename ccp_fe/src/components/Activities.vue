@@ -5,8 +5,8 @@
       <el-button v-if="userType === 'teacher' || userType === 'admin'" size="mini" type="primary" class="mr-5 my-auto"
         @click="publishActivity">发布活动</el-button>
     </el-header>
-    <el-main>
-      <el-table :data="activities" style="width: 100%" height="700">
+    <el-main class="flex justify-center">
+      <el-table :data="activities" style="width: 80%" height="700">
         <el-table-column prop="title" label="活动名称" width="120">
           <template #default="{ row }">
             <el-button link size="small" class="p-2" type="primary" @click="viewActivity(row.activityId)">{{ row.title
@@ -14,7 +14,7 @@
           </template>
         </el-table-column>
         <!-- <el-table-column prop="description" label="活动描述"></el-table-column> -->
-        <el-table-column label="活动描述">
+        <el-table-column label="活动描述" min-width="300">
           <template #default="{ row }">
             <div class="description-ellipsis">{{ row.description.length > 90 ? row.description.substring(0, 88) + "......"
               : row.description }}</div>
@@ -23,9 +23,9 @@
         <!-- <el-table-column prop="creationTime" label="创建时间"></el-table-column> -->
         <el-table-column prop="beginTime" label="开始时间" width="120"></el-table-column>
         <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="150">
           <template #default="{ row }">
-            <el-button link size="small" class="p-2" type="primary" @click="clickSignUp(row)">报名</el-button>
+            <el-button v-if="userType === 'student'" link size="small" class="p-2" type="primary" @click="clickSignUp(row)">报名</el-button>
 
             <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
               link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
@@ -166,12 +166,12 @@ const publishActivity = () => {
   router.push(`/home/addActivity`);
 }
 
-const approveActivity = (id: number) => {
-  // 这里你可能需要调用批准报名的API
+const approveActivity = (activityId: number) => {
+  router.push(`/home/approveRegistraions/${activityId}`);
 }
 
-const editActivity = (id: number) => {
-  // 这里你可能需要调用修改活动的API
+const editActivity = (activityId: number) => {
+  router.push(`/home/editActivity/${activityId}`);
 }
 </script>
 

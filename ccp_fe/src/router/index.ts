@@ -28,6 +28,16 @@ const router = createRouter({
           component: () => import('@/components/AddActivity.vue'),
         },
         {
+          path: 'editActivity/:activityId',
+          name: 'EditActivity',
+          component: () => import('@/components/AddActivity.vue'),
+        },
+        {
+          path: 'approveRegistraions/:activityId',
+          name: 'ApproveRegistrations',
+          component: () => import('@/components/ApproveRegistrations.vue'),
+        },
+        {
           path: 'posts',
           name: 'Posts',
           component: () => import('@/components/Posts.vue'),
@@ -39,7 +49,7 @@ const router = createRouter({
             {
               path: 'manage',
               name: 'Manage',
-              component: () => import('@/components/Manage.vue'),
+              component: () => import('@/components/ProfileManage.vue'),
             },
             {
               path: 'verify',

@@ -38,7 +38,7 @@ class Http {
     }
 
     // 所有2xx的响应都会进入这里
-    if(response.status >= 200 && response.status < 300) {
+    if(response.status >= 200 && response.status < 300) { 
       const apiResponse = response.data;
       if (apiResponse.code === 20000) {
         if(apiResponse.data) {

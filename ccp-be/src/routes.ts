@@ -113,6 +113,12 @@ const routes: IRoute[] = [
   },
   {
     method: 'post',
+    path: '/updateActivity',
+    controller: ActivityController,
+    action: 'updateActivity',
+  },
+  {
+    method: 'post',
     path: '/signUpActivity',
     controller: ActivityController,
     action: 'signUpActivity',
@@ -122,6 +128,18 @@ const routes: IRoute[] = [
     path: '/getSignUpFlag',
     controller: ActivityController,
     action: 'getSignUpFlag',
+  },
+  {
+    method: 'get',
+    path: '/getRegistrations',
+    controller: ActivityController,
+    action: 'getRegistrations',
+  },
+  {
+    method: 'post',
+    path: '/reviewRegistration',
+    controller: ActivityController,
+    action: 'reviewRegistration',
   }
 ];
 

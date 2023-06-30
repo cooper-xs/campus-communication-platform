@@ -11,6 +11,11 @@ export default class ActivitiesService {
     return newActivity;
   }
 
+  public async updateActivity(activity: any) {
+    const res = await ActivitiesRepository.save(activity);
+    return res;
+  }
+
   public async findActivityById(activityId: string) {
     const activity = await ActivitiesRepository.findOne({
       where: {

@@ -25,6 +25,14 @@ export class Registrations {
   @Column("datetime", { name: "RegistrationTime", nullable: true })
   registrationTime: Date | null;
 
+  @Column("tinyint", {
+    name: "State",
+    nullable: true,
+    comment: "0: 未审核, 1: 审核通过, 2:审核拒绝",
+    width: 1,
+  })
+  state: boolean | null;
+
   @ManyToOne(() => Students, (students) => students.registrations, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

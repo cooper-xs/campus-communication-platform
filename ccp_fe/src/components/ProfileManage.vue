@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="loading">
+    <el-empty description="加载中"></el-empty>
+  </div>
+  <div v-else>
     <el-form :model="profileForm" label-width="120px">
       <!-- 公共信息 -->
       <el-form-item label="昵称">
@@ -60,7 +63,10 @@ const props = defineProps({
 
 const profileForm = ref({} as any);
 
+const loading = ref(false);
+
 onMounted(async () => {
+  loading.value = true;
   if (props.userType === 'student') {
     profileForm.value = props.student;
   } else if (props.userType === 'teacher') {
@@ -68,6 +74,7 @@ onMounted(async () => {
   } else if (props.userType === 'admin') {
     profileForm.value = props.admin;
   }
+  loading.value = false;
 });
 
 const submitForm = async () => {

@@ -8,8 +8,8 @@ import {
 } from "typeorm";
 import { Students } from "./Students";
 
-@Index("RecipientID", ["recipientId"], {})
 @Index("SenderID", ["senderId"], {})
+@Index("RecipientID", ["recipientId"], {})
 @Entity("messages", { schema: "ccp" })
 export class Messages {
   @PrimaryGeneratedColumn({ type: "int", name: "MessageID" })

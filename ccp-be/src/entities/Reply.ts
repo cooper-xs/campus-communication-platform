@@ -17,6 +17,9 @@ export class Reply {
   @Column("int", { name: "CommentID" })
   commentId: number;
 
+  @Column("varchar", { name: "UserType", nullable: true, length: 255 })
+  userType: string | null;
+
   @Column("int", { name: "UserID" })
   userId: number;
 
@@ -25,9 +28,6 @@ export class Reply {
 
   @Column("datetime", { name: "CreationTime" })
   creationTime: Date;
-
-  @Column("varchar", { name: "UserNickname", nullable: true, length: 255 })
-  userNickname: string | null;
 
   @ManyToOne(() => Comments, (comments) => comments.replies, {
     onDelete: "NO ACTION",

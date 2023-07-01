@@ -28,13 +28,13 @@
               <span>帖子</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/posts/list">
+              <el-menu-item index="/post/list">
                 <el-icon>
                   <List />
                 </el-icon>
                 <span>帖子列表</span>
               </el-menu-item>
-              <el-menu-item index="/posts/publish">
+              <el-menu-item index="/post/publish">
                 <el-icon>
                   <Plus />
                 </el-icon>
@@ -57,7 +57,7 @@
                 </el-icon>
                 <span>活动列表</span>
               </el-menu-item>
-              <el-menu-item v-if="teacher || admin" index="/addActivity">
+              <el-menu-item v-if="teacher.teacherId || admin.adminId" index="/addActivity">
                 <el-icon>
                   <Plus />
                 </el-icon>

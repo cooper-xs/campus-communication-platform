@@ -32,3 +32,33 @@ export interface NewActivityForm {
   beginTime: Date;
   endTime: Date;
 }
+
+export interface post {
+  postId: string;
+  userType: string;
+  userId: string;
+  title:  string;
+  content: string;
+  postImg: string;
+  creationTime: Date;
+  state: number;
+}
+
+export interface comment {
+  commentId: string;
+  userType: string;
+  userId: string;
+  postId: string;
+  content: string;
+  creationTime: Date;
+}
+
+export interface reply {
+  replyId: string;
+  commentId: string;
+  userType: string;
+  userId: string;
+  content: string;
+  creationTime: Date;
+}
+

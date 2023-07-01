@@ -38,9 +38,20 @@ const router = createRouter({
           component: () => import('@/components/ApproveRegistrations.vue'),
         },
         {
-          path: 'posts',
-          name: 'Posts',
-          component: () => import('@/components/Posts.vue'),
+          path: 'post',
+          name: 'Post',
+          children: [
+            {
+              path: 'list',
+              name: 'PostList',
+              component: () => import('@/components/PostList.vue'),
+            },
+            {
+              path: 'publish',
+              name: 'Publish',
+              component: () => import('@/components/PostPublish.vue'),
+            }
+          ]
         },
         {
           path: 'profile',

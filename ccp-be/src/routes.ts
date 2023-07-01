@@ -74,9 +74,15 @@ const routes: IRoute[] = [
   },
   {
     method: 'get',
-    path: '/getPostsAsPage',
+    path: '/getPosts',
     controller: PostController,
-    action: 'getPostsAsPage',
+    action: 'getPosts',
+  },
+  {
+    method: 'get',
+    path: '/getComments',
+    controller: PostController,
+    action: 'getComments',
   },
 
 
@@ -140,7 +146,7 @@ const routes: IRoute[] = [
     path: '/reviewRegistration',
     controller: ActivityController,
     action: 'reviewRegistration',
-  }
+  },
 ];
 
 const router = new Router();

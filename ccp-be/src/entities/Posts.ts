@@ -2,14 +2,11 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Comments } from "./Comments";
 import { Postmoderation } from "./Postmoderation";
-import { Students } from "./Students";
 import { Toprequests } from "./Toprequests";
 
 @Index("UserID", ["userId"], {})
@@ -17,6 +14,9 @@ import { Toprequests } from "./Toprequests";
 export class Posts {
   @PrimaryGeneratedColumn({ type: "int", name: "PostID" })
   postId: number;
+
+  @Column("varchar", { name: "UserType", nullable: true, length: 255 })
+  userType: string | null;
 
   @Column("int", { name: "UserID", nullable: true })
   userId: number | null;
@@ -47,13 +47,6 @@ export class Posts {
 
   @OneToMany(() => Postmoderation, (postmoderation) => postmoderation.post)
   postmoderations: Postmoderation[];
-
-  @ManyToOne(() => Students, (students) => students.posts, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "UserID", referencedColumnName: "studentId" }])
-  user: Students;
 
   @OneToMany(() => Toprequests, (toprequests) => toprequests.post)
   toprequests: Toprequests[];

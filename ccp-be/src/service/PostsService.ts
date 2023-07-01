@@ -23,12 +23,8 @@ export default class PostsService {
     }
   }
 
-  public async getPostsAsPage(page: number, pageSize: number) {
-    const posts = await PostsRepository.find({
-      where: { pinnedState: 1 },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+  public async getPosts() {
+    const posts = await PostsRepository.find();
     return posts;
   }
 }

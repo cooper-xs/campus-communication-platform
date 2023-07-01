@@ -1,7 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Comments } from "./Comments";
 import { Messages } from "./Messages";
-import { Posts } from "./Posts";
 import { Registrations } from "./Registrations";
 
 @Entity("students", { schema: "ccp" })
@@ -41,17 +39,11 @@ export class Students {
   })
   verified: boolean | null;
 
-  @OneToMany(() => Comments, (comments) => comments.user)
-  comments: Comments[];
-
   @OneToMany(() => Messages, (messages) => messages.sender)
   messages: Messages[];
 
   @OneToMany(() => Messages, (messages) => messages.recipient)
   messages2: Messages[];
-
-  @OneToMany(() => Posts, (posts) => posts.user)
-  posts: Posts[];
 
   @OneToMany(() => Registrations, (registrations) => registrations.student)
   registrations: Registrations[];

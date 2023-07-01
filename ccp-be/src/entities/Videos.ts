@@ -9,8 +9,8 @@ import {
 import { Teachers } from "./Teachers";
 import { Activities } from "./Activities";
 
-@Index("ActivityID", ["activityId"], {})
 @Index("TeacherID", ["teacherId"], {})
+@Index("ActivityID", ["activityId"], {})
 @Entity("videos", { schema: "ccp" })
 export class Videos {
   @PrimaryGeneratedColumn({ type: "int", name: "VideoID" })

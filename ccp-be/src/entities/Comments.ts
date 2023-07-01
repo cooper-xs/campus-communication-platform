@@ -7,16 +7,18 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Students } from "./Students";
 import { Posts } from "./Posts";
 import { Reply } from "./Reply";
 
-@Index("PostID", ["postId"], {})
 @Index("UserID", ["userId"], {})
+@Index("PostID", ["postId"], {})
 @Entity("comments", { schema: "ccp" })
 export class Comments {
   @PrimaryGeneratedColumn({ type: "int", name: "CommentID" })
   commentId: number;
+
+  @Column("varchar", { name: "UserType", nullable: true, length: 255 })
+  userType: string | null;
 
   @Column("int", { name: "UserID", nullable: true })
   userId: number | null;
@@ -29,13 +31,6 @@ export class Comments {
 
   @Column("datetime", { name: "CreationTime", nullable: true })
   creationTime: Date | null;
-
-  @ManyToOne(() => Students, (students) => students.comments, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "UserID", referencedColumnName: "studentId" }])
-  user: Students;
 
   @ManyToOne(() => Posts, (posts) => posts.comments, {
     onDelete: "CASCADE",

@@ -5,10 +5,10 @@
   <div v-else class="h-full w-full flex justify-center items-center">
     <el-form v-model="activityForm" label-width="120px">
       <el-form-item label="活动标题">
-        <el-input v-model="activityForm.title" maxlength="10" show-word-limit></el-input>
+        <el-input v-model="activityForm.title" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="活动描述">
-        <el-input v-model="activityForm.description" type="textarea" :rows="4" maxlength="200" show-word-limit></el-input>
+        <el-input v-model="activityForm.description" type="textarea" :rows="4" maxlength="400" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="开始时间">
         <el-date-picker v-model="activityForm.beginTime" type="datetime" placeholder="选择日期"></el-date-picker>

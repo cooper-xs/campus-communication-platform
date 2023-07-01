@@ -84,6 +84,24 @@ const routes: IRoute[] = [
     controller: PostController,
     action: 'getComments',
   },
+  {
+    method: 'post',
+    path: '/addComment',
+    controller: PostController,
+    action: 'addComment',
+  },
+  {
+    method: 'get',
+    path: '/getReplys',
+    controller: PostController,
+    action: 'getReplys',
+  },
+  {
+    method: 'post',
+    path: '/addReply',
+    controller: PostController,
+    action: 'addReply',
+  },
 
 
   // 活动

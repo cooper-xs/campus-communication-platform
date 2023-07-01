@@ -17,4 +17,5 @@ export interface newPost {
   content: string;
   pinnedState?: number;
   creationTime?: Date;
+  nickname: string;
 }

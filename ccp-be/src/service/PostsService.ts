@@ -27,4 +27,18 @@ export default class PostsService {
     const posts = await PostsRepository.find();
     return posts;
   }
+
+  public async getPostsByUserTypeAndId(userType: string, userId: string) {
+    const posts = await PostsRepository.find({
+      where: { userType, userId },
+    });
+    return posts;
+  }
+
+  public async getPostsByUserType(userType: string) {
+    const posts = await PostsRepository.find({
+      where: { userType },
+    });
+    return posts;
+  }
 }

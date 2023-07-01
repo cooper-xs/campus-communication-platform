@@ -17,11 +17,17 @@ export class Reply {
   @Column("int", { name: "CommentID" })
   commentId: number;
 
+  @Column("varchar", { name: "ParentReplyNickname", length: 255 })
+  parentReplyNickname: string;
+
   @Column("varchar", { name: "UserType", nullable: true, length: 255 })
   userType: string | null;
 
   @Column("int", { name: "UserID" })
   userId: number;
+
+  @Column("varchar", { name: "NickName", length: 255 })
+  nickName: string;
 
   @Column("varchar", { name: "Content", length: 255 })
   content: string;

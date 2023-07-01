@@ -7,7 +7,6 @@ export default class PostsService {
   }
 
   public async getCommentsByPostId(postId: number) {
-    console.log(postId);
     const comments = await CommentsRepository.find({
       where: { postId },
     });
@@ -17,5 +16,10 @@ export default class PostsService {
   public async getCommentsAll() {
     const comments = await CommentsRepository.find();
     return comments;
+  }
+
+  public async addComment(newComment: any) {
+    const comment = await CommentsRepository.save(newComment);
+    return comment;
   }
 }

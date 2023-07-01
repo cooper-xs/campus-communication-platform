@@ -1,4 +1,4 @@
-function timeDiff(time: string): string {
+function timeUsual(time: string): string {
   const date = new Date(time);
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2); // months are zero indexed
@@ -8,4 +8,4 @@ function timeDiff(time: string): string {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
-export default timeDiff;
+export default timeUsual;

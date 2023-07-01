@@ -21,6 +21,9 @@ export class Posts {
   @Column("int", { name: "UserID", nullable: true })
   userId: number | null;
 
+  @Column("varchar", { name: "NickName", length: 255 })
+  nickName: string;
+
   @Column("varchar", { name: "Title", nullable: true, length: 255 })
   title: string | null;
 

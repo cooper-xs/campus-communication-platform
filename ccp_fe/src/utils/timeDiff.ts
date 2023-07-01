@@ -1,4 +1,4 @@
-function timeFormat(time: string): string {
+function timeDiff(time: string): string {
   const between = Date.now() / 1000 - new Date(time).getTime() / 1000;
   if (between < -1) {
     const absBetween = Math.abs(between);
@@ -22,4 +22,4 @@ function timeFormat(time: string): string {
   }
 }
 
-export default timeFormat;
+export default timeDiff;

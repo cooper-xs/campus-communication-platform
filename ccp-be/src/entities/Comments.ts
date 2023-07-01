@@ -23,6 +23,9 @@ export class Comments {
   @Column("int", { name: "UserID", nullable: true })
   userId: number | null;
 
+  @Column("varchar", { name: "NickName", length: 255 })
+  nickName: string;
+
   @Column("int", { name: "PostID", nullable: true })
   postId: number | null;
 

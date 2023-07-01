@@ -42,6 +42,7 @@ export interface post {
   postImg: string;
   creationTime: Date;
   state: number;
+  nickName: string;
 }
 
 export interface comment {
@@ -51,13 +52,17 @@ export interface comment {
   postId: string;
   content: string;
   creationTime: Date;
+  nickName: string;
+  replys: reply[];
 }
 
 export interface reply {
   replyId: string;
   commentId: string;
+  parentReplyNickname: string;
   userType: string;
   userId: string;
+  nickName: string;
   content: string;
   creationTime: Date;
 }

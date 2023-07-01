@@ -11,11 +11,14 @@ export interface IRoute {
   needLogin?: boolean;
 }
 
-export interface newPost {
+export interface updatePost {
+  postId?: number;
+  userType: string;
   userId: number;
   title: string;
   content: string;
-  pinnedState?: number;
+  postImg?: string;
   creationTime?: Date;
-  nickname: string;
+  nickName: string;
+  state: number;
 }

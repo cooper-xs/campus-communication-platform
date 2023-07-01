@@ -53,6 +53,12 @@ const props = defineProps({
   student: {
     type: Object,
   },
+  userId: {
+    type: String,
+  },
+  nickName: {
+    type: String,
+  },
   teacher: {
     type: Object,
   },

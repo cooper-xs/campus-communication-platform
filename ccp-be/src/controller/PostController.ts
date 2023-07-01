@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import type { newPost } from "../types";
+import type { updatePost } from "../types";
 import PostsService from "../service/PostsService";
 import CommentsService from "../service/CommentsService";
 import { tool } from "../utils/tool";
@@ -17,23 +17,42 @@ export default class PostController {
     this._replyService = new ReplyService(this.ctx);
   }
 
-  public async addPost() {
-    const { userId, title, content, nickname } = this.ctx.request
-      .body as newPost;
+  public async updatePost() {
+    const { postId, userType, userId, title, content, nickName, postImg, state } = this.ctx.request
+      .body as updatePost;
+
+    // 打印所有参数
+    console.log(postId, userType, userId, title, content, nickName, postImg);
 
     const creationTime = new Date();
     creationTime.setSeconds(creationTime.getSeconds() - 1);
 
-    const res = await this._postsService.addPost({
-      userId,
-      title,
-      content,
-      pinnedState: 0,
-      creationTime,
-      nickname,
-    });
-
-    return res;
+    if(postId) {
+      const res = await this._postsService.updatePost({
+        postId,
+        userType,
+        userId,
+        title,
+        content,
+        postImg,
+        creationTime,
+        nickName,
+        state,
+      });
+      return res;
+    } else {
+      const res = await this._postsService.updatePost({
+        userType,
+        userId,
+        title,
+        content,
+        postImg,
+        creationTime,
+        nickName,
+        state,
+      });
+      return res;
+    }
   }
 
   public async reviewPost() {

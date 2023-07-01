@@ -1,14 +1,14 @@
 import { Context } from "koa";
 import { PostsRepository } from "../config/data-source";
-import { newPost } from "../types";
+import { updatePost } from "../types";
 
 export default class PostsService {
   public constructor(private readonly ctx: Context) {
     this.ctx = ctx;
   }
 
-  public async addPost(newPost: newPost) {
-    const post = await PostsRepository.save(newPost);
+  public async updatePost(updatePost: updatePost) {
+    const post = await PostsRepository.save(updatePost);
     return post;
   }
 

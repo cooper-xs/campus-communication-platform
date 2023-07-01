@@ -60,9 +60,9 @@ const routes: IRoute[] = [
   // 帖子
   {
     method: 'post',
-    path: '/addPost',
+    path: '/updatePost',
     controller: PostController,
-    action: 'addPost',
+    action: 'updatePost',
     // needLogin: true,
   },
   {

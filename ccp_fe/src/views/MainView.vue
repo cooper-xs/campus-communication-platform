@@ -9,10 +9,10 @@
         }} 老师</el-button>
         <el-button v-if="admin.adminId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName
         }}</el-button>
-        <el-button type="text" class="text-white" @click="logout">退出</el-button>
+        <el-button type="text" class="text-white pr-4" @click="logout">退出</el-button>
       </div>
       <div v-else class="user-actions">
-        <el-button type="text" class="text-white" @click="login">登录</el-button>
+        <el-button type="text" class="text-white mr-4" @click="login">登录</el-button>
       </div>
     </el-header>
 
@@ -115,7 +115,7 @@
       </el-aside>
 
       <el-main>
-        <router-view :userType="userType" :student="student" :teacher="teacher" :admin="admin"></router-view>
+        <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher" :admin="admin"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -128,6 +128,8 @@ import ElMessage from "element-plus/lib/components/message/index.js";
 import { onMounted, ref } from "vue";
 
 const userType = ref('')
+const userId = ref('')
+const nickName = ref('')
 const student = ref({
   studentId: '',
   nickName: '',
@@ -164,15 +166,18 @@ onMounted(async () => {
   if (userType.value === 'student') {
     student.value.studentId = localStorage.getItem('userId') || '';
     student.value = await Http.get('/getStudentById', { params: { studentId: student.value.studentId } });
-    console.log(student.value);
+    userId.value = student.value.studentId;
+    nickName.value = student.value.nickName;
   } else if (userType.value === 'teacher') {
     teacher.value.teacherId = localStorage.getItem('userId') || '';
     teacher.value = await Http.get('/getTeacherById', { params: { teacherId: teacher.value.teacherId } });
-    console.log(teacher.value);
+    userId.value = teacher.value.teacherId;
+    nickName.value = teacher.value.nickName;
   } else if (userType.value === 'admin') {
     admin.value.adminId = localStorage.getItem('userId') || '';
     admin.value = await Http.get('/getAdminById', { params: { adminId: admin.value.adminId } });
-    console.log(admin.value);
+    userId.value = admin.value.adminId;
+    nickName.value = admin.value.name;
   }
 });
 

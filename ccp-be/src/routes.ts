@@ -14,9 +14,15 @@ const upload = multer({ storage: storage }).array('file', 5); // 最多上传5�
 const routes: IRoute[] = [
   {
     method: 'post',
-    path: '/uploadMP4',
+    path: '/uploadFile',
     controller: ActivityController,
-    action: 'uploadMP4',
+    action: 'uploadFile',
+  },
+  {
+    method: 'post',
+    path: '/deleteFile',
+    controller: ActivityController,
+    action: 'deleteFile',
   },
   {
     method: 'post',
@@ -56,7 +62,7 @@ const routes: IRoute[] = [
     controller: IdentityController,
     action: 'updateProfile',
   },
-
+  
   // 帖子
   {
     method: 'post',
@@ -77,6 +83,18 @@ const routes: IRoute[] = [
     path: '/getPosts',
     controller: PostController,
     action: 'getPosts',
+  },
+  {
+    method: 'get',
+    path: '/getPostByPostId',
+    controller: PostController,
+    action: 'getPostByPostId',
+  },
+  {
+    method: 'post',
+    path: '/deletePost',
+    controller: PostController,
+    action: 'deletePost',
   },
   {
     method: 'get',
@@ -102,8 +120,14 @@ const routes: IRoute[] = [
     controller: PostController,
     action: 'addReply',
   },
-
-
+  {
+    method: 'post',
+    path: '/addPostReview',
+    controller: PostController,
+    action: 'addPostReview',
+  },
+  
+  
   // 活动
   {
     method: 'get',
@@ -171,13 +195,13 @@ const router = new Router();
 
 routes.forEach((route) => {
   const middlewares = [];
-  if(route.action === 'uploadMP4') {
+  if(route.action === 'uploadFile') {
     middlewares.push(upload);
   }
   router[route.method](route.path, ...middlewares, async (ctx: Context) => {
     // eslint-disable-next-line new-cap
     const controller = new route.controller(ctx);
-    if(route.action === 'uploadMP4') {
+    if(route.action === 'uploadFile') {
       // @ts-ignore
       return await controller[route.action](ctx.req.files);
     }

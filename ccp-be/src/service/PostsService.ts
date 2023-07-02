@@ -28,6 +28,13 @@ export default class PostsService {
     return posts;
   }
 
+  public async getPostByPostId(postId: number) {
+    const post = await PostsRepository.findOne({
+      where: { postId },
+    });
+    return post;
+  }
+
   public async getPostsByUserTypeAndId(userType: string, userId: string) {
     const posts = await PostsRepository.find({
       where: { userType, userId },
@@ -40,5 +47,48 @@ export default class PostsService {
       where: { userType },
     });
     return posts;
+  }
+
+  public async deletePost(postId: number) {
+    const post = await PostsRepository.findOne({
+      where: { postId },
+    });
+    if (post) {
+      await PostsRepository.remove(post);
+      return post;
+    }
+  }
+
+  public async passPost(postId: number) {
+    const post = await PostsRepository.findOne({
+      where: { postId },
+    });
+    if (post) {
+      post.state = 2;
+      await PostsRepository.save(post);
+      return post;
+    }
+  }
+
+  public async rejectPost(postId: number) {
+    const post = await PostsRepository.findOne({
+      where: { postId },
+    });
+    if (post) {
+      post.state = 3;
+      await PostsRepository.save(post);
+      return post;
+    }
+  }
+
+  public async waittingReviewPost(postId: number) {
+    const post = await PostsRepository.findOne({
+      where: { postId },
+    });
+    if (post) {
+      post.state = 1;
+      await PostsRepository.save(post);
+      return post;
+    }
   }
 }

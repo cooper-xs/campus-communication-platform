@@ -6,12 +6,16 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/home',
+      redirect: '/home/post/list',
     },
     {
       path: '/home',
       component: Main,
       children: [
+        {
+          path: '/',
+          redirect: '/post/list',
+        },
         {
           path: 'activities',
           name: 'Activities',

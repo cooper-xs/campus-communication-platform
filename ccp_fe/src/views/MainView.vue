@@ -30,7 +30,7 @@
             <el-menu-item-group>
               <el-menu-item index="/post/list">
                 <el-icon>
-                  <List />
+                  <Ship />
                 </el-icon>
                 <span>帖子列表</span>
               </el-menu-item>
@@ -53,7 +53,7 @@
             <el-menu-item-group>
               <el-menu-item index="/activities">
                 <el-icon>
-                  <List />
+                  <Basketball />
                 </el-icon>
                 <span>活动列表</span>
               </el-menu-item>
@@ -115,7 +115,8 @@
       </el-aside>
 
       <el-main>
-        <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher" :admin="admin"></router-view>
+        <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher"
+          :admin="admin"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -215,5 +216,4 @@ function handleMenuSelect(index: string) {
 .aside {
   width: 200px;
   background-color: #f5f7fa;
-}
-</style>
+}</style>

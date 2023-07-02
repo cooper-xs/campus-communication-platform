@@ -4,7 +4,7 @@
       <div class="text-lg font-bold">
         上传视频
       </div>
-      <el-upload class="" drag action="/api/uploadMP4" multiple :on-success="handleUploadSuccess"
+      <el-upload class="" drag action="/api/uploadFile" multiple :on-success="handleUploadSuccess"
         :on-error="handleUploadError">
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">

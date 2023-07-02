@@ -32,3 +32,9 @@ export async function put(name: string, buffer: Buffer) {
   // console.log(result.url);
   return result.url;
 }
+
+export async function deleteFile(filename: string) {
+  const result = await client.delete(`ccp/${filename}`);
+  console.log(result);
+  return result;
+}

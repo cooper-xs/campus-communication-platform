@@ -13,10 +13,12 @@
           <template v-slot:header>
             <div class="flex justify-between">
               <span class="font-bold">{{ post.title }}</span>
-              <el-tag v-if="post.state === 1" type="warning">待审核</el-tag>
-              <el-tag v-else-if="post.state === 3" type="danger">审核未通过</el-tag>
-              <el-tag v-else-if="post.state === 4" type="info">草稿未发布</el-tag>
-              <el-tag v-if="post.userType === 'teacher'">老师帖</el-tag>
+              <div>
+                <el-tag v-if="post.state === 1" type="warning">待审核</el-tag>
+                <el-tag v-else-if="post.state === 3" type="danger">审核未通过</el-tag>
+                <el-tag v-else-if="post.state === 4" type="info">草稿未发布</el-tag>
+                <el-tag v-if="post.userType === 'teacher'" class="ml-3">老师帖</el-tag>
+              </div>
             </div>
           </template>
           <div class="p-3">
@@ -33,13 +35,19 @@
     <el-scrollbar height="">
       <div class="p-2">
         <!-- <el-divider /> -->
-        <div class="p-3 font-bold">
-          {{ currentPost.title }}
-          <el-button v-if="currentPost.userType === props.userType && currentPost.userId === props.userId" type="danger"
-            class="ml-5" @click="deletePost">删除</el-button>
-          <el-tag v-if="currentPost.state === 1" type="warning">待审核</el-tag>
-          <el-tag v-else-if="currentPost.state === 3" type="danger">审核未通过</el-tag>
-          <el-tag v-else-if="currentPost.state === 4" type="info">草稿未发布</el-tag>
+        <div class="flex justify-between">
+          <div class="p-3 font-bold">
+            {{ currentPost.title }}
+          </div>
+          <div class="flex flex-row items-center">
+            <el-tag v-if="currentPost.state === 1" type="warning">待审核</el-tag>
+            <el-tag v-else-if="currentPost.state === 3" type="danger">审核未通过</el-tag>
+            <el-tag v-else-if="currentPost.state === 4" type="info">草稿未发布</el-tag>
+            <div v-if="currentPost.userType === props.userType && currentPost.userId === props.userId" class="mx-5">
+              <el-button type="danger" @click="deletePost">删除</el-button>
+              <el-button v-if="currentPost.state === 4" type="primary" @click="publishPost(currentPost)">去发布</el-button>
+            </div>
+          </div>
         </div>
         <div class="p-3">
           发帖时间: {{ timeUsual(currentPost.creationTime.toString()) +
@@ -118,6 +126,7 @@ import type { reply, comment, post } from '@/types'
 import Http from '@/utils/Http';
 import timeDiff from '@/utils/timeDiff';
 import timeUsual from '@/utils/timeUsual';
+import router from '@/router';
 
 const props = defineProps({
   userType: {
@@ -188,10 +197,10 @@ const fetchPosts = async () => {
   } else {
     posts.value = await Http.get('/getPosts');
   }
-  if(props.userType !== 'admin') {
+  if (props.userType !== 'admin') {
     // 筛选未审核/审核不通过/草稿 且 不是自己的帖子
     posts.value = posts.value.filter(post => !(post.state !== 0 && post.state !== 2 && post.userId !== props.userId))
-  } 
+  }
 }
 
 const checkSwitchState = (id: number) => {
@@ -339,6 +348,15 @@ const deletePost = () => {
     }
   }).catch(() => {
     ElMessage.info('已取消删除')
+  })
+}
+
+const publishPost = (post: post) => {
+  router.push({
+    path: '/home/post/publish',
+    query: {
+      postId: post.postId,
+    },
   })
 }
 </script>

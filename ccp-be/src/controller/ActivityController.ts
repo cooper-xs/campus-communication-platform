@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import ActivitiesService from "../service/ActivitiesService";
-import { client, put } from "../utils/uploadAliOSS";
+import { put, deleteFile } from "../utils/AliyunOSS";
 import multer from "koa-multer";
 import VideosService from "../service/VideosService";
 import RegistrationsService from "../service/RegistrationsService";
@@ -17,7 +17,7 @@ export default class ActivityController {
     this.ctx = ctx;
   }
 
-  public async uploadMP4(files: any) {
+  public async uploadFile(files: any) {
     // console.log(files);
     console.log("资源上传开始");
     try {
@@ -36,6 +36,20 @@ export default class ActivityController {
       console.log("资源上传失败");
     } finally {
       console.log("资源上传结束");
+    }
+  }
+
+  public async deleteFile() {
+    const { url } = this.ctx.request.body as {
+      url: string;
+    };
+    try {
+      const filename = url.split("/").pop();
+      console.log(filename);
+      await deleteFile(filename);
+      this.ctx.status = 204;
+    } catch {
+      console.log("资源删除失败");
     }
   }
 

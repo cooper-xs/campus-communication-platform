@@ -11,10 +11,10 @@ import { Administrators } from "./Administrators";
 
 @Index("PostID", ["postId"], {})
 @Index("ReviewerID", ["adminId"], {})
-@Entity("postmoderation", { schema: "ccp" })
-export class Postmoderation {
-  @PrimaryGeneratedColumn({ type: "int", name: "ModerationID" })
-  moderationId: number;
+@Entity("postreview", { schema: "ccp" })
+export class Postreview {
+  @PrimaryGeneratedColumn({ type: "int", name: "ReviewID" })
+  reviewId: number;
 
   @Column("int", { name: "PostID", nullable: true })
   postId: number | null;
@@ -23,17 +23,17 @@ export class Postmoderation {
   adminId: number | null;
 
   @Column("tinyint", {
-    name: "ModerationStatus",
+    name: "Status",
     nullable: true,
     comment: "0: 审核为通过状态, 1: 审核为不通过状态, 2: 修改为待审核状态",
     width: 1,
   })
-  moderationStatus: boolean | null;
+  status: boolean | null;
 
-  @Column("datetime", { name: "ModerationTime", nullable: true })
-  moderationTime: Date | null;
+  @Column("datetime", { name: "CreationTime", nullable: true })
+  creationTime: Date | null;
 
-  @ManyToOne(() => Posts, (posts) => posts.postmoderations, {
+  @ManyToOne(() => Posts, (posts) => posts.postreviews, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
@@ -42,7 +42,7 @@ export class Postmoderation {
 
   @ManyToOne(
     () => Administrators,
-    (administrators) => administrators.postmoderations,
+    (administrators) => administrators.postreviews,
     { onDelete: "CASCADE", onUpdate: "CASCADE" }
   )
   @JoinColumn([{ name: "AdminID", referencedColumnName: "adminId" }])

@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Comments } from "./Comments";
-import { Postmoderation } from "./Postmoderation";
+import { Postreview } from "./Postreview";
 import { Toprequests } from "./Toprequests";
 
 @Index("UserID", ["userId"], {})
@@ -48,8 +48,8 @@ export class Posts {
   @OneToMany(() => Comments, (comments) => comments.post)
   comments: Comments[];
 
-  @OneToMany(() => Postmoderation, (postmoderation) => postmoderation.post)
-  postmoderations: Postmoderation[];
+  @OneToMany(() => Postreview, (postreview) => postreview.post)
+  postreviews: Postreview[];
 
   @OneToMany(() => Toprequests, (toprequests) => toprequests.post)
   toprequests: Toprequests[];

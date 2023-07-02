@@ -6,37 +6,50 @@
       </template>
     </el-result>
   </div>
-  <el-form v-else :model="form" label-width="120px">
-    <el-form-item label="标题" prop="title">
-      <el-input v-model="form.title" :maxlength="20" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="内容" prop="content">
-      <el-input v-model="form.content" type="textarea" :rows="4" :maxlength="200" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="上传图片">
-      <el-upload action="/api/uploadMP4" drag :limit="1" :on-success="handleSuccess" :on-remove="handleRemove">
-        <el-icon><upload-filled /></el-icon>
-        <div class="el-upload__text">
-          拖动到这里 或者 <em>点击上传</em>
-        </div>
-        <template #tip>
-          <div class="el-upload__tip">
-            最多上传一张图片
+  <div v-else>
+    <div v-if="currentPost?.state === 4">
+      <el-tag type="warning">草稿</el-tag>
+    </div>
+    <el-form :model="form" label-width="120px">
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="form.title" :maxlength="20" show-word-limit></el-input>
+      </el-form-item>
+      <el-form-item label="内容" prop="content">
+        <el-input v-model="form.content" type="textarea" :rows="4" :maxlength="200" show-word-limit></el-input>
+      </el-form-item>
+      <el-form-item label="上传图片">
+        <el-upload action="/api/uploadFile" drag :limit="1" :before-upload="beforeUpload"
+          :on-success="handleSuccess" :on-remove="handleRemove" :on-error="handleError">
+          <el-icon><upload-filled /></el-icon>
+          <div class="el-upload__text">
+            拖动到这里 或者 <em>点击上传</em>
           </div>
-        </template>
-      </el-upload>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm">提交</el-button>
-    </el-form-item>
-  </el-form>
+          <template #tip>
+            <div class="el-upload__tip">
+              最多上传一张图片
+            </div>
+          </template>
+        </el-upload>
+      </el-form-item>
+      <el-form-item>
+        <img v-if="form.postImg !== ''" :src="form.postImg" class="h-60 w-60"/>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submitForm(1)">直接发布</el-button>
+        <el-button type="info" @click="submitForm(2)">保存草稿</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import router from '@/router';
 import Http from '@/utils/Http';
 import ElMessage from 'element-plus/lib/components/message/index.js';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import sensitiveWords from '@/utils/sensitiveWords'
+import type { post } from '@/types';
 
 const props = defineProps({
   userType: {
@@ -62,23 +75,32 @@ const props = defineProps({
 const form = ref({
   title: '',
   content: '',
-  post_img: ''
+  postImg: ''
 });
 const submited = ref(false);
-import sensitiveWords from '@/utils/sensitiveWords'
-import { fa } from 'element-plus/lib/locale/index.js';
+const currentPost = ref<post>({
+  postId: '',
+  userType: '',
+  userId: '',
+  title: '',
+  content: '',
+  postImg: '',
+  creationTime: new Date(),
+  state: 0,
+  nickName: '',
+})
 
-const handleSuccess = (response: any) => {
-  if (response.code === 20000) {
-    form.value.post_img = response.data.url;
-  } else {
-    ElMessage.error('图片上传失败');
+onMounted(async () => {
+  if (router.currentRoute.value.query.postId) {
+    console.log(router.currentRoute.value.query.postId);
+    currentPost.value.postId = router.currentRoute.value.query.postId as string;
+    currentPost.value = await Http.get('/getPostByPostId', { params: { postId: currentPost.value.postId } });
+    form.value.title = currentPost.value.title;
+    form.value.content = currentPost.value.content;
+    form.value.postImg = currentPost.value.postImg;
   }
-};
+})
 
-const handleRemove = () => {
-  form.value.post_img = '';
-};
 
 const checkContent = (value: string) => {
   // 检查有没有敏感词
@@ -90,9 +112,9 @@ const checkContent = (value: string) => {
   }
   return false;
 }
+const submitForm = async (flag: number) => {
 
-const submitForm = async () => {
-  const { title, content, post_img } = form.value;
+  const { title, content, postImg } = form.value;
   if (!title || !content) {
     ElMessage.warning('标题和内容不能为空');
     return;
@@ -100,14 +122,19 @@ const submitForm = async () => {
 
   let state = 0;
 
-  if(checkContent(title) || checkContent(content)) {
-    ElMessage.info('等待审核')
-    state = 1;
+  if (flag === 1) { // 直接发布
+    if (checkContent(title) || checkContent(content)) {
+      state = 1;
+    }
+  } else if (flag === 2) { // 保存草稿
+    state = 4;
   }
 
   const postParams = {
-    title, content,
-    post_img,
+    postId: currentPost.value.postId ?? '',
+    title,
+    content,
+    postImg,
     userType: props.userType,
     userId: props.userId,
     nickName: props.nickName,
@@ -119,13 +146,55 @@ const submitForm = async () => {
     if (response) {
       form.value.title = '';
       form.value.content = '';
-      form.value.post_img = '';
+      form.value.postImg = '';
       submited.value = true;
-      // ElMessage.success('提交成功');
+    }
+    if (postParams.state === 0) {
+      ElMessage.success('发布成功');
+    } else if (postParams.state === 2) {
+      ElMessage.success('您的帖子正等待管理员审核');
+    } else if (postParams.state === 4) {
+      ElMessage.info('您编辑的内容暂存在草稿箱中')
     }
   } catch (error) {
     ElMessage.error('提交失败');
   }
+};
+
+const handleSuccess = (response: any, file: any, fileList: any) => {
+  form.value.postImg = response.data.urls[0];
+  ElMessage.success('上传成功');
+};
+
+const handleError = () => {
+  ElMessage.error('图片上传失败，请重新上传');
+};
+
+const handleRemove = () => {
+  if (form.value.postImg !== '') {
+    Http.post('/deleteFile', { url: form.value.postImg })
+    .then(() => {
+      form.value.postImg = '';
+      ElMessage.success('删除成功');
+    }).catch(() => {
+      ElMessage.error('删除失败');
+    })
+  }
+};
+
+const beforeUpload = (file: File) => {
+  const isJPG = file.type === 'image/jpeg';
+  const isPNG = file.type === 'image/png';
+  // 还可以加别的类型
+  const isLimit500k = file.size / 1024 / 1024 < 0.5;
+
+  if (!isJPG && !isPNG) {
+    ElMessage.error('上传帖子图片只能是 JPG/PNG 格式!');
+  }
+  if (!isLimit500k) {
+    ElMessage.error('上传帖子图片大小不能超过 500k!');
+  }
+  return (isJPG || isPNG) && isLimit500k;
 };
 
 const toPosts = () => {

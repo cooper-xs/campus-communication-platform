@@ -22,7 +22,7 @@ export const AppDataSource = new DataSource({
 });
 
 export const TopRequestsRepository = AppDataSource.getRepository("TopRequests");
-export const PostModerationRepository = AppDataSource.getRepository("PostModeration");
+export const PostReviewRepository = AppDataSource.getRepository("PostReview");
 export const ReplyRepository = AppDataSource.getRepository("Reply");
 export const RegistrationsRepository = AppDataSource.getRepository("Registrations");
 export const MessagesRepository = AppDataSource.getRepository("Messages");

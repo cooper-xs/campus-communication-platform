@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Postmoderation } from "./Postmoderation";
+import { Postreview } from "./Postreview";
 import { Toprequests } from "./Toprequests";
 
 @Entity("administrators", { schema: "ccp" })
@@ -16,8 +16,8 @@ export class Administrators {
   @Column("varchar", { name: "Password", nullable: true, length: 255 })
   password: string | null;
 
-  @OneToMany(() => Postmoderation, (postmoderation) => postmoderation.admin)
-  postmoderations: Postmoderation[];
+  @OneToMany(() => Postreview, (postreview) => postreview.admin)
+  postreviews: Postreview[];
 
   @OneToMany(() => Toprequests, (toprequests) => toprequests.admin)
   toprequests: Toprequests[];

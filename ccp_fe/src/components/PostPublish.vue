@@ -7,9 +7,6 @@
     </el-result>
   </div>
   <div v-else>
-    <div v-if="currentPost?.state === 4">
-      <el-tag type="warning">草稿</el-tag>
-    </div>
     <el-form :model="form" label-width="120px">
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" :maxlength="20" show-word-limit></el-input>
@@ -18,8 +15,8 @@
         <el-input v-model="form.content" type="textarea" :rows="4" :maxlength="200" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="上传图片">
-        <el-upload action="/api/uploadFile" drag :limit="1" :before-upload="beforeUpload"
-          :on-success="handleSuccess" :on-remove="handleRemove" :on-error="handleError">
+        <el-upload action="/api/uploadFile" drag :limit="1" :before-upload="beforeUpload" :on-success="handleSuccess"
+          :on-remove="handleRemove" :on-error="handleError">
           <el-icon><upload-filled /></el-icon>
           <div class="el-upload__text">
             拖动到这里 或者 <em>点击上传</em>
@@ -32,12 +29,13 @@
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <img v-if="form.postImg !== ''" :src="form.postImg" class="h-60 w-60"/>
+        <img v-if="form.postImg !== ''" :src="form.postImg" class="h-60 w-60" />
       </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="submitForm(1)">直接发布</el-button>
         <el-button type="info" @click="submitForm(2)">保存草稿</el-button>
+        <el-tag v-if="currentPost?.state === 4" class="ml-3" type="warning">草稿</el-tag>
       </el-form-item>
     </el-form>
   </div>
@@ -173,12 +171,12 @@ const handleError = () => {
 const handleRemove = () => {
   if (form.value.postImg !== '') {
     Http.post('/deleteFile', { url: form.value.postImg })
-    .then(() => {
-      form.value.postImg = '';
-      ElMessage.success('删除成功');
-    }).catch(() => {
-      ElMessage.error('删除失败');
-    })
+      .then(() => {
+        form.value.postImg = '';
+        ElMessage.success('删除成功');
+      }).catch(() => {
+        ElMessage.error('删除失败');
+      })
   }
 };
 

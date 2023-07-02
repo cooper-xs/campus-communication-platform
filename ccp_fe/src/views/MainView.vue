@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <el-container>
     <el-header class="header">
@@ -34,11 +35,17 @@
                 </el-icon>
                 <span>帖子列表</span>
               </el-menu-item>
-              <el-menu-item index="/post/publish">
+              <el-menu-item v-if="student.studentId || teacher.teacherId || admin.adminId" index="/post/publish">
                 <el-icon>
                   <Plus />
                 </el-icon>
                 <span>添加帖子</span>
+              </el-menu-item>
+              <el-menu-item v-if="admin.adminId" index="/post/review">
+                <el-icon>
+                  <View />
+                </el-icon>
+                <span>审核帖子</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
@@ -66,7 +73,7 @@
             </el-menu-item-group>
           </el-sub-menu>
 
-          <el-sub-menu index="3">
+          <el-sub-menu v-if="teacher.teacherId || student.studentId" index="3">
             <template #title>
               <el-icon>
                 <User />
@@ -116,7 +123,7 @@
 
       <el-main>
         <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher"
-          :admin="admin"></router-view>
+          :admin="admin" :verifyStatus="verifyStatus" @updateVerify="verifyStatus = $event"></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -126,11 +133,12 @@
 import router from "@/router";
 import Http from "@/utils/Http";
 import ElMessage from "element-plus/lib/components/message/index.js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const userType = ref('')
 const userId = ref('')
 const nickName = ref('')
+const verifyStatus = ref(0)
 const student = ref({
   studentId: '',
   nickName: '',
@@ -162,7 +170,16 @@ const admin = ref({
   password: '',
 })
 
-onMounted(async () => {
+onMounted(() => {
+  fatchUser();
+});
+
+watch(verifyStatus, () => {
+  console.log('watch: ', verifyStatus.value)
+  fatchUser();
+})
+
+const fatchUser = async () => {
   userType.value = localStorage.getItem('userType') || '';
   if (userType.value === 'student') {
     student.value.studentId = localStorage.getItem('userId') || '';
@@ -180,7 +197,7 @@ onMounted(async () => {
     userId.value = admin.value.adminId;
     nickName.value = admin.value.name;
   }
-});
+}
 
 const login = () => {
   router.push('/login');

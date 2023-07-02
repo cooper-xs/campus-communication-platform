@@ -24,4 +24,11 @@ export default class TeacherService {
     const result = await TeachersRepository.save(teacher);
     return result;
   }
+
+  public async findTeacherByPid(pid: number) {
+    const teacher = await TeachersRepository.findOne({
+      where: { pid },
+    });
+    return teacher;
+  }
 }

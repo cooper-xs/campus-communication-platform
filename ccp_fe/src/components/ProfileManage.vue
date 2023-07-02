@@ -2,8 +2,8 @@
   <div v-if="loading">
     <el-empty description="加载中"></el-empty>
   </div>
-  <div v-else>
-    <el-form :model="profileForm" label-width="120px">
+  <div v-else class="flex justify-center items-center">
+    <el-form :model="profileForm" label-width="120px" size="300">
       <!-- 公共信息 -->
       <el-form-item label="昵称">
         <el-input v-model="profileForm.nickName"></el-input>
@@ -73,6 +73,11 @@ const loading = ref(false);
 
 onMounted(async () => {
   loading.value = true;
+  await fetchProfile();  
+  loading.value = false;
+});
+
+const fetchProfile = async () => {
   if (props.userType === 'student') {
     profileForm.value = props.student;
   } else if (props.userType === 'teacher') {
@@ -80,8 +85,7 @@ onMounted(async () => {
   } else if (props.userType === 'admin') {
     profileForm.value = props.admin;
   }
-  loading.value = false;
-});
+};
 
 const submitForm = async () => {
   // 保存个人信息

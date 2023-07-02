@@ -22,3 +22,10 @@ export interface updatePost {
   nickName: string;
   state: number;
 }
+
+export interface verifyItems {
+  userType: string;
+  userName: string;
+  pid: string;
+  academy: string;
+}

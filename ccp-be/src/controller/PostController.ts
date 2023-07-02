@@ -66,12 +66,33 @@ export default class PostController {
   }
 
   public async reviewPost() {
-    const { postId, pinnedState } = this.ctx.request.body as {
+    const { postId, status, adminId } = this.ctx.request.body as {
       postId: number;
-      pinnedState: number;
+      status: number; // 审核形式：0-审核通过，1-审核不通过, 2-待审核
+      adminId: number;
     };
 
-    const res = await this._postsService.reviewPost(postId, pinnedState);
+    let state = 0;
+
+    if(status === 0) {
+      state = 2;
+    } else if(status === 1) {
+      state = 3;
+    } else if(status === 2) {
+      state = 1;
+    }
+
+    const creationTime = new Date();
+    creationTime.setSeconds(creationTime.getSeconds() - 1);
+
+    const res = await this._postsService.reviewPost(postId, state);
+
+    const postReview = await this._postReviewService.addPostReview({
+      postId,
+      adminId,
+      status,
+      creationTime,
+    })
 
     return res;
   }

@@ -34,4 +34,13 @@ export default class StudentsService {
     const result = await StudentsRepository.save(student);
     return result;
   }
+
+  public async findStudentByPid(pid: number) {
+    const student = await StudentsRepository.findOne({
+      where: {
+        pid,
+      },
+    });
+    return student;
+  }
 }

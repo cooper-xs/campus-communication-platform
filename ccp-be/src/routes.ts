@@ -62,6 +62,12 @@ const routes: IRoute[] = [
     controller: IdentityController,
     action: 'updateProfile',
   },
+  {
+    method: 'post',
+    path: '/verify',
+    controller: IdentityController,
+    action: 'verify',
+  },
   
   // 帖子
   {
@@ -125,6 +131,12 @@ const routes: IRoute[] = [
     path: '/addPostReview',
     controller: PostController,
     action: 'addPostReview',
+  },
+  {
+    method: 'post',
+    path: '/reviewPost',
+    controller: PostController,
+    action: 'reviewPost',
   },
   
   

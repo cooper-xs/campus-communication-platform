@@ -5,6 +5,8 @@
         <el-switch v-model="switchOnlyMe" active-text="只看我" class="ml-5" @change="checkSwitchState(1), fetchPosts()" />
         <el-switch v-model="switchOnlyStudent" active-text="只看学生" class="ml-5"
           @change="checkSwitchState(2), fetchPosts()" />
+        <el-switch v-if="props.userType === 'admin'" v-model="switchReview" active-text="审核" class="ml-5"
+          @change="reviewPostModel()"></el-switch>
       </el-divider>
     </div>
     <div class="masonry">
@@ -46,6 +48,13 @@
             <div v-if="currentPost.userType === props.userType && currentPost.userId === props.userId" class="mx-5">
               <el-button type="danger" @click="deletePost">删除</el-button>
               <el-button v-if="currentPost.state === 4" type="primary" @click="publishPost(currentPost)">去发布</el-button>
+              <el-button v-else type="primary" @click="publishPost(currentPost)">去修改</el-button>
+            </div>
+            <div v-else-if="props.userType === 'admin'" class="mx-5">
+              <el-button :disabled="currentPost.state !== 2 && currentPost.state !== 3" type="success"
+                @click="reviewPost(1)">审核通过</el-button>
+              <el-button :disabled="currentPost.state === 1 || currentPost.state === 2" type="danger"
+                @click="reviewPost(2)">审核不通过</el-button>
             </div>
           </div>
         </div>
@@ -156,6 +165,7 @@ const innerDrawer = ref(false)
 const currentPost = ref<post>()
 const switchOnlyMe = ref(false)
 const switchOnlyStudent = ref(false)
+const switchReview = ref(false)
 
 const initCommentForm: comment = {
   commentId: '',
@@ -301,31 +311,6 @@ const submitReply = async () => {
 
 const handleClose = (done: any) => {
   done()
-  //   ElMessage({
-  //     message: '关闭后所有未保存的内容将会丢失',
-  //     type: 'warning',
-  //     duration: 0,
-  //     showClose: true,
-  //     confirmButtonText: '确定',
-  //     cancelButtonText: '取消',
-  //     beforeClose: async (action, instance, done) => {
-  //       if (action === 'confirm') {
-  //         instance.confirmButtonLoading = true
-  //         instance.confirmButtonText = '执行中...'
-  //         await delay(1000) // 等待中...
-  //         done()
-  //         setTimeout(() => {
-  //           instance.confirmButtonLoading = false
-  //         }, 300)
-  //       } else {
-  //         done()
-  //       }
-  //     },
-  //   }).then(() => {
-  //     done()
-  //   }).catch(() => {
-  //     ElMessage.info('取消关闭')
-  //   })
 }
 
 const handleReplyClose = (done: any) => {
@@ -359,6 +344,30 @@ const publishPost = (post: post) => {
     },
   })
 }
+
+const reviewPostModel = () => {
+  if (switchReview.value) {
+    posts.value = posts.value.filter(post => post.state === 1)
+  } else {
+    fetchPosts()
+  }
+}
+
+const reviewPost = async (flag: number) => {
+  const reviewParams = {
+    postId: currentPost.value?.postId,
+    state: flag,
+    adminId: localStorage.getItem('userId'),
+  }
+  const res = await Http.post('/reviewPost', reviewParams);
+  if (res) {
+    ElMessage.success('审核成功')
+    await fetchPosts()
+    drawer.value = false
+  } else {
+    ElMessage.error('审核失败')
+  }
+} 
 </script>
 
 <style scoped>

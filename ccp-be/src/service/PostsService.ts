@@ -12,19 +12,23 @@ export default class PostsService {
     return post;
   }
 
-  public async reviewPost(postId: number, pinnedState: number) {
+  public async reviewPost(postId: number, state: number) {
     const post = await PostsRepository.findOne({
       where: { postId },
     });
     if (post) {
-      post.pinnedState = pinnedState;
+      post.state = state;
       await PostsRepository.save(post);
       return post;
     }
   }
 
   public async getPosts() {
-    const posts = await PostsRepository.find();
+    const posts = await PostsRepository.find({
+      order: {
+        creationTime: "DESC",
+      },
+    });
     return posts;
   }
 

@@ -3,11 +3,14 @@ import AdministratorsService from "../service/AdministratorsService";
 import StudentsService from "../service/StudentsService";
 import TeacherService from "../service/TeachersService";
 import { tool } from "../utils/tool";
+import { verifyItems } from "../types";
+import AuthenticationsService from "../service/AuthenticationsService";
 
 export default class IdentityController {
   private readonly _administratorsService = new AdministratorsService(this.ctx);
   private readonly _teachersService = new TeacherService(this.ctx);
   private readonly _studentsService = new StudentsService(this.ctx);
+  private readonly _authenticationsService = new AuthenticationsService(this.ctx);
 
   public constructor(private readonly ctx: Context) {
     this.ctx = ctx;
@@ -105,8 +108,39 @@ export default class IdentityController {
     return newStudent;
   }
 
-  public async updateProfile() {
+  public async verify() {
+    const { userType, userName, pid, academy } = this.ctx.request.body as verifyItems;
 
+    const flag = await this._authenticationsService.checkVerify({
+      userType,
+      userName,
+      pid,
+      academy
+    })
+
+    if(flag) {
+      if(userType === 'student') {
+        const student = await this._studentsService.findStudentByPid(tool.toNumber(pid));
+        if(student) {
+          student.verified = true;
+          await this._studentsService.updateStudent(student);
+          return student;
+        }
+      } else if(userType === 'teacher') {
+        const teacher = await this._teachersService.findTeacherByPid(tool.toNumber(pid));
+        if(teacher) {
+          teacher.verified = true;
+          await this._teachersService.updateTeacher(teacher);
+          return teacher;
+        }
+      }
+    } else {
+      this.ctx.status = 404;
+    }
+
+  }
+
+  public async updateProfile() {
     const { userType } = this.ctx.request.body as { userType: string };
 
     if (userType === "student") {
@@ -156,14 +190,8 @@ export default class IdentityController {
         this.ctx.status = 404;
       }
     } else if (userType === "teacher") {
-      let {
-        teacherId,
-        name,
-        nickName,
-        password,
-        email,
-        academy,
-      } = this.ctx.request.body as {
+      let { teacherId, name, nickName, password, email, academy } = this.ctx
+        .request.body as {
         teacherId: string;
         name: string;
         nickName: string;
@@ -187,17 +215,11 @@ export default class IdentityController {
         });
 
         return teacher;
-      
       } else {
         this.ctx.status = 404;
       }
     } else if (userType === "admin") {
-      let {
-        adminId,
-        name,
-        password,
-        email,
-      } = this.ctx.request.body as {
+      let { adminId, name, password, email } = this.ctx.request.body as {
         adminId: string;
         name: string;
         password: string;

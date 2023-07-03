@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
-  <el-container>
-    <el-header class="header">
+  <el-container class="">
+    <el-header class="header bg-red-300">
       <div class="logo">校园交流平台</div>
       <div v-if="userType" class="user-info">
         <el-button v-if="student.studentId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.name
@@ -18,7 +18,7 @@
     </el-header>
 
     <el-container>
-      <el-aside class="aside">
+      <el-aside class="aside bg-gradient-to-b from-red-300 to-blue-200">
         <el-menu :default-active="2" :default-openeds="['1', '2', '3', '4']" @select="handleMenuSelect">
 
           <el-sub-menu index="1">
@@ -39,7 +39,7 @@
                 <el-icon>
                   <Plus />
                 </el-icon>
-                <span>添加帖子</span>
+                <span>发布帖子</span>
               </el-menu-item>
               <el-menu-item v-if="admin.adminId" index="/post/review">
                 <el-icon>
@@ -78,7 +78,7 @@
               <el-icon>
                 <User />
               </el-icon>
-              <span>个人信息</span>
+              <span>个人中心</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/profile/manage">
@@ -91,7 +91,7 @@
                 <el-icon>
                   <CircleCheck />
                 </el-icon>
-                <span>实名认证</span>
+                <span>身份认证</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
@@ -121,9 +121,11 @@
         </el-menu>
       </el-aside>
 
-      <el-main>
-        <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher"
-          :admin="admin" :verifyStatus="verifyStatus" @updateVerify="verifyStatus = $event"></router-view>
+      <el-main class="bg-gradient-to-b from-red-300 to-blue-200">
+        <el-scrollbar>
+          <router-view :userType="userType" :userId="userId" :nickName="nickName" :student="student" :teacher="teacher"
+            :admin="admin" :verifyStatus="verifyStatus" @updateVerify="verifyStatus = $event"></router-view>
+        </el-scrollbar>
       </el-main>
     </el-container>
   </el-container>
@@ -221,7 +223,7 @@ function handleMenuSelect(index: string) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #409eff;
+  /* background-color: #743ef1; */
   color: #ffffff;
   padding: 0 20px;
 }

@@ -18,8 +18,8 @@
         <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
-        <!-- <el-button @click="saveDraft">保存草稿</el-button> -->
+        <el-button type="primary" @click="verifyDialogVisible = true">提交</el-button>
+        <el-button @click="router.push('/home/post/list')">取消</el-button>
       </el-form-item>
     </el-form>
     <el-dialog v-model="dialogVisible" title="提示" width="30%">
@@ -30,6 +30,13 @@
       </template>
     </el-dialog>
   </div>
+  <el-dialog v-model="verifyDialogVisible" title="确定" width="30%">
+    <span>确认发布?</span>
+    <template #footer>
+      <el-button @click="verifyDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="verifyDialogVisible = false, submitForm()">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -76,6 +83,8 @@ const dialogVisible = ref(false);
 const isChanged = ref(false);
 
 let nextRoute = null as any;
+
+const verifyDialogVisible = ref(false);
 
 watch(form, () => {
   isChanged.value = true;

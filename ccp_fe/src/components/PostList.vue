@@ -33,7 +33,7 @@
 
   </el-scrollbar>
   <el-drawer v-if="currentPost" v-model="drawer" :title="'发帖人: ' + currentPost.nickName" size="50%" z-index="1000"
-    :before-close="handleClose">
+    :before-close="handleClose" class="bg-gradient-to-b from-red-300 to-blue-200">
     <el-scrollbar height="">
       <div class="p-2">
         <!-- <el-divider /> -->
@@ -51,9 +51,9 @@
               <el-button v-else type="primary" @click="publishPost(currentPost)">去修改</el-button>
             </div>
             <div v-else-if="props.userType === 'admin'" class="mx-5">
-              <el-button :disabled="currentPost.state !== 2 && currentPost.state !== 3" type="success"
+              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 3" type="success"
                 @click="reviewPost(1)">审核通过</el-button>
-              <el-button :disabled="currentPost.state === 1 || currentPost.state === 2" type="danger"
+              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 2" type="danger"
                 @click="reviewPost(2)">审核不通过</el-button>
             </div>
           </div>
@@ -70,7 +70,7 @@
       <el-divider />
       <el-form :model="commentForm" label-width="60px" :disabled="props.userType === ''">
         <el-form-item label="评论">
-          <el-input v-model="commentForm.content" type="textarea" :rows="3" placeholder="请输入内容"></el-input>
+          <el-input v-model="commentForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitComment()">{{ props.userType === '' ? "请先登录" : "发表评论" }}</el-button>
@@ -115,10 +115,10 @@
       </el-card>
     </el-scrollbar>
     <el-drawer v-model="innerDrawer" :title="'回复给>' + currentReplyObj?.nickName" append-to-body="true"
-      :before-close="handleReplyClose">
+      :before-close="handleReplyClose" class="bg-gradient-to-b from-red-300 to-blue-200">
       <el-form :model="replyForm" label-width="60px" :disabled="props.userType === ''">
         <el-form-item label="评论">
-          <el-input v-model="replyForm.content" type="textarea" :rows="3" placeholder="请输入内容"></el-input>
+          <el-input v-model="replyForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100" show-word-limit></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitReply()">{{ props.userType === '' ? "请先登录" : "发表评论" }}</el-button>
@@ -259,7 +259,7 @@ const fetchReplys = async (comments: comment[]) => {
 
 const submitComment = async () => {
   if (commentForm.content === '') {
-    ElMessage.warning('请输入内容')
+    ElMessage.warning('请填写评论内容, 100字以内')
     return
   }
   const addCommentParams = {

@@ -33,12 +33,19 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm(1)">直接发布</el-button>
+        <el-button type="primary" @click="clickSubmitForm()">直接发布</el-button>
         <el-button type="info" @click="submitForm(2)">保存草稿</el-button>
         <el-tag v-if="currentPost?.state === 4" class="ml-3" type="warning">草稿</el-tag>
       </el-form-item>
     </el-form>
   </div>
+  <el-dialog v-model="pushPostDialogVisible" title="确定" width="30%">
+    <span>确认发布?</span>
+    <template #footer>
+      <el-button @click="pushPostDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="pushPostDialogVisible = false, submitForm(1)">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -87,6 +94,16 @@ const currentPost = ref<post>({
   state: 0,
   nickName: '',
 })
+const pushPostDialogVisible = ref(false);
+
+const clickSubmitForm = () => {
+  const { title, content, postImg } = form.value;
+  if (!title || !content) {
+    ElMessage.warning('标题和内容不能为空');
+    return;
+  }
+  pushPostDialogVisible.value = true;
+}
 
 onMounted(async () => {
   if (router.currentRoute.value.query.postId) {
@@ -113,10 +130,6 @@ const checkContent = (value: string) => {
 const submitForm = async (flag: number) => {
 
   const { title, content, postImg } = form.value;
-  if (!title || !content) {
-    ElMessage.warning('标题和内容不能为空');
-    return;
-  }
 
   let state = 0;
 
@@ -149,10 +162,10 @@ const submitForm = async (flag: number) => {
     }
     if (postParams.state === 0) {
       ElMessage.success('发布成功');
-    } else if (postParams.state === 2) {
-      ElMessage.success('您的帖子正等待管理员审核');
+    } else if (postParams.state === 1) {
+      ElMessage.info('您的帖子正等待管理员审核');
     } else if (postParams.state === 4) {
-      ElMessage.info('您编辑的内容暂存在草稿箱中')
+      ElMessage.info('您编辑的内容暂存在草稿箱')
     }
   } catch (error) {
     ElMessage.error('提交失败');

@@ -17,12 +17,20 @@
         <el-date-picker v-model="activityForm.endTime" type="datetime" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button type="primary" @click="pushActivityDialogVisible = true">提交</el-button>
+        <el-button @click="toActivities">取消</el-button>
         <el-button v-if="activity.activityId" type="default"
           @click="$router.push(`/home/activity/${activity.activityId}`)">上传视频</el-button>
       </el-form-item>
     </el-form>
   </div>
+  <el-dialog v-model="pushActivityDialogVisible" title="确定" width="30%">
+    <span>确认发布?</span>
+    <template #footer>
+      <el-button @click="pushActivityDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="pushActivityDialogVisible = false, onSubmit()">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -72,6 +80,7 @@ const activity = ref({
   creationTime: '',
 });
 const loading = ref(false);
+const pushActivityDialogVisible = ref(false);
 
 onMounted(async () => {
   loading.value = true;
@@ -96,8 +105,28 @@ const onSubmit = async () => {
     ElMessage.error('请先登录');
     return;
   }
+
+  if (!activityForm.title || !activityForm.description) {
+    ElMessage.warning('活动标题和描述不能为空');
+    return;
+  }
+
+  // 结束时间不能超过开始时间
+  if (activityForm.endTime.getTime() < activityForm.beginTime.getTime()) {
+    ElMessage.warning('您设置的活动时间不符合要求!');
+    return;
+  }
+
+  // 开始时间必须晚于当前时间
+  if (activityForm.beginTime.getTime() < new Date().getTime()) {
+    ElMessage.warning('您设置的活动时间不符合要求!');
+    return;
+  }
+
+  console.log(activity.value.activityId)
+
   const activityParams = {
-    activityId: activity.value.activityId,
+    activityId: activity.value.activityId ?? '',
     teacherId: props.teacher.teacherId,
     ...activityForm,
   }
@@ -110,4 +139,7 @@ const onSubmit = async () => {
   }
 };
 
+const toActivities = () => {
+  router.push('/home/activities');
+}
 </script>

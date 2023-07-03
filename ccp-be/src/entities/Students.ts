@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Messages } from "./Messages";
 import { Registrations } from "./Registrations";
 
 @Entity("students", { schema: "ccp" })
@@ -38,12 +37,6 @@ export class Students {
     width: 1,
   })
   verified: boolean | null;
-
-  @OneToMany(() => Messages, (messages) => messages.sender)
-  messages: Messages[];
-
-  @OneToMany(() => Messages, (messages) => messages.recipient)
-  messages2: Messages[];
 
   @OneToMany(() => Registrations, (registrations) => registrations.student)
   registrations: Registrations[];

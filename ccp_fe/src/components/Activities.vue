@@ -119,7 +119,7 @@ const clickSignUp = async (row: any) => {
     ElMessage.error('请先登录')
     return;
   }
-  if (props.student.verified) {
+  if (props.student.verified !== 1) {
     ElMessage.error('请前往个人中心进行学生认证')
     return;
   }

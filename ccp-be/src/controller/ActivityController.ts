@@ -176,14 +176,26 @@ export default class ActivityController {
       beginTime: Date;
       endTime: Date;
     };
-    const res = await this._activitiesService.updateActivity({
-      activityId,
-      title,
-      description,
-      beginTime,
-      endTime,
-    });
-    return res;
+
+    if(activityId === '') {
+      const res = await this._activitiesService.updateActivity({
+        title,
+        description,
+        beginTime,
+        endTime,
+      });
+      return res;
+    } else {
+      const res = await this._activitiesService.updateActivity({
+        activityId,
+        title,
+        description,
+        beginTime,
+        endTime,
+      });
+      return res;
+    }
+
   }
 
   public async getRegistrations() {

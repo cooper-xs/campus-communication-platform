@@ -17,6 +17,7 @@ export default class PostController {
     this._postsService = new PostsService(this.ctx);
     this._commentsService = new CommentsService(this.ctx);
     this._replyService = new ReplyService(this.ctx);
+    this._postReviewService = new PostReviewService(this.ctx);
   }
 
   public async updatePost() {
@@ -30,9 +31,6 @@ export default class PostController {
       postImg,
       state,
     } = this.ctx.request.body as updatePost;
-
-    // 打印所有参数
-    console.log(postId, userType, userId, title, content, nickName, postImg);
 
     const creationTime = new Date();
     creationTime.setSeconds(creationTime.getSeconds() - 1);
@@ -74,11 +72,11 @@ export default class PostController {
 
     let state = 0;
 
-    if(status === 0) {
+    if (status === 0) {
       state = 2;
-    } else if(status === 1) {
+    } else if (status === 1) {
       state = 3;
-    } else if(status === 2) {
+    } else if (status === 2) {
       state = 1;
     }
 
@@ -90,11 +88,11 @@ export default class PostController {
     const postReview = await this._postReviewService.addPostReview({
       postId,
       adminId,
-      status,
+      state,
       creationTime,
-    })
+    });
 
-    return res;
+    return { res, postReview };
   }
 
   public async getPosts() {
@@ -205,8 +203,6 @@ export default class PostController {
     const creationTime = new Date();
     creationTime.setSeconds(creationTime.getSeconds() - 1);
 
-    console.log(commentId);
-
     const res = await this._replyService.addReply({
       commentId,
       userId,
@@ -229,23 +225,23 @@ export default class PostController {
 
     const creationTime = new Date();
     creationTime.setSeconds(creationTime.getSeconds() - 1);
-    
+
     let flag = 0;
 
-    if(status === 0) {
+    if (status === 0) {
       const res = await this._postsService.passPost(postId);
       flag = res.affectedRows;
-    } else if(status === 1) {
+    } else if (status === 1) {
       const res = await this._postsService.rejectPost(postId);
       flag = res.affectedRows;
-    } else if(status === 2) {
+    } else if (status === 2) {
       const res = await this._postsService.waittingReviewPost(postId);
       flag = res.affectedRows;
     } else {
       this.ctx.status = 400;
     }
 
-    if(flag) {
+    if (flag) {
       const res = await this._postReviewService.addPostReview({
         postId,
         adminId,

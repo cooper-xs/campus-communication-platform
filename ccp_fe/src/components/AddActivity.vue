@@ -2,27 +2,30 @@
   <div v-if="loading">
     <el-empty description="加载中"></el-empty>
   </div>
-  <div v-else class="h-full w-full flex justify-center items-center">
-    <el-form v-model="activityForm" label-width="120px">
-      <el-form-item label="活动标题">
-        <el-input v-model="activityForm.title" maxlength="20" show-word-limit></el-input>
-      </el-form-item>
-      <el-form-item label="活动描述">
-        <el-input v-model="activityForm.description" type="textarea" :rows="4" maxlength="400" show-word-limit></el-input>
-      </el-form-item>
-      <el-form-item label="开始时间">
-        <el-date-picker v-model="activityForm.beginTime" type="datetime" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="结束时间">
-        <el-date-picker v-model="activityForm.endTime" type="datetime" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="pushActivityDialogVisible = true">提交</el-button>
-        <el-button @click="toActivities">取消</el-button>
-        <el-button v-if="activity.activityId" type="default"
-          @click="$router.push(`/home/activity/${activity.activityId}`)">上传视频</el-button>
-      </el-form-item>
-    </el-form>
+  <div v-else class="flex justify-center items-center h-200">
+    <el-card class="p-10 pr-30">
+      <el-form v-model="activityForm" label-width="120px">
+        <el-form-item label="活动标题">
+          <el-input v-model="activityForm.title" maxlength="20" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="活动描述">
+          <el-input v-model="activityForm.description" type="textarea" :rows="4" maxlength="400"
+            show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker v-model="activityForm.beginTime" type="datetime" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-date-picker v-model="activityForm.endTime" type="datetime" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="clickSubmitForm">提交</el-button>
+          <el-button @click="toActivities">取消</el-button>
+          <el-button v-if="activity.activityId" type="default"
+            @click="$router.push(`/home/activity/${activity.activityId}`)">上传视频</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
   <el-dialog v-model="pushActivityDialogVisible" title="确定" width="30%">
     <span>确认发布?</span>
@@ -64,8 +67,8 @@ const props = defineProps({
 const initActivityForm: NewActivityForm = {
   title: '',
   description: '',
-  beginTime: new Date(),
-  endTime: new Date(),
+  beginTime: null,
+  endTime: null,
 };
 
 const activityForm = reactive({ ...initActivityForm })
@@ -101,33 +104,9 @@ onMounted(async () => {
 })
 
 const onSubmit = async () => {
-  if (!props.teacher) {
-    ElMessage.error('请先登录');
-    return;
-  }
-
-  if (!activityForm.title || !activityForm.description) {
-    ElMessage.warning('活动标题和描述不能为空');
-    return;
-  }
-
-  // 结束时间不能超过开始时间
-  if (activityForm.endTime.getTime() < activityForm.beginTime.getTime()) {
-    ElMessage.warning('您设置的活动时间不符合要求!');
-    return;
-  }
-
-  // 开始时间必须晚于当前时间
-  if (activityForm.beginTime.getTime() < new Date().getTime()) {
-    ElMessage.warning('您设置的活动时间不符合要求!');
-    return;
-  }
-
-  console.log(activity.value.activityId)
-
   const activityParams = {
     activityId: activity.value.activityId ?? '',
-    teacherId: props.teacher.teacherId,
+    teacherId: props.teacher!.teacherId,
     ...activityForm,
   }
   const res = await Http.post('/updateActivity', activityParams);
@@ -141,5 +120,32 @@ const onSubmit = async () => {
 
 const toActivities = () => {
   router.push('/home/activities');
+}
+
+
+const clickSubmitForm = () => {
+  if (!props.teacher) {
+    ElMessage.error('请先登录');
+    return;
+  }
+
+  if (!activityForm.title || !activityForm.description || !activityForm.beginTime || !activityForm.endTime) {
+    ElMessage.warning('您填写的活动信息不完整');
+    return;
+  }
+
+  // 结束时间不能超过开始时间
+  if (activityForm.endTime.getTime() < activityForm.beginTime.getTime()) {
+    ElMessage.warning('结束时间不能超过开始时间!');
+    return;
+  }
+
+  // 开始时间必须晚于当前时间
+  if (activityForm.beginTime.getTime() < new Date().getTime()) {
+    ElMessage.warning('开始时间必须晚于当前时间!');
+    return;
+  }
+
+  pushActivityDialogVisible.value = true;
 }
 </script>

@@ -6,29 +6,31 @@
       </template>
     </el-result>
   </div>
-  <div v-else>
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="学院">
-        <el-input v-model="form.academy" placeholder="请输入学院"></el-input>
-      </el-form-item>
-      <el-form-item label="证件号">
-        <el-input v-model="form.pid" placeholder="请输入证件号"></el-input>
-      </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="verifyDialogVisible = true">提交</el-button>
-        <el-button @click="router.push('/home/post/list')">取消</el-button>
-      </el-form-item>
-    </el-form>
-    <el-dialog v-model="dialogVisible" title="提示" width="30%">
-      <span>你有未保存的更改，确定要离开吗？</span>
-      <template #footer>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmLeave">确定</el-button>
-      </template>
-    </el-dialog>
+  <div v-else class="flex justify-center items-center h-200">
+    <el-card class="p-10 pr-30">
+      <el-form :model="form" label-width="120px">
+        <el-form-item label="学院">
+          <el-input v-model="form.academy" placeholder="请输入学院"></el-input>
+        </el-form-item>
+        <el-form-item label="证件号">
+          <el-input v-model="form.pid" placeholder="请输入证件号"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="verifyDialogVisible = true">提交</el-button>
+          <el-button @click="router.push('/home/post/list')">取消</el-button>
+        </el-form-item>
+      </el-form>
+      <el-dialog v-model="dialogVisible" title="提示" width="30%">
+        <span>你有未保存的更改，确定要离开吗？</span>
+        <template #footer>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="confirmLeave">确定</el-button>
+        </template>
+      </el-dialog>
+    </el-card>
   </div>
   <el-dialog v-model="verifyDialogVisible" title="确定" width="30%">
     <span>确认发布?</span>

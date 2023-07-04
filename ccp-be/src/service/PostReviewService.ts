@@ -7,7 +7,19 @@ export default class PostReviewService {
   }
 
   public async addPostReview(newRostReview: any) {
-    const res = await PostReviewRepository.save(newRostReview);
+    const {
+      postId,
+      adminId,
+      status,
+      creationTime,
+    } = newRostReview;
+    console.log(newRostReview);
+    const res = await PostReviewRepository.save({
+      postId,
+      adminId,
+      status,
+      creationTime,
+    });
     return res;
   }
 }

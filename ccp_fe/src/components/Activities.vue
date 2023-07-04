@@ -5,37 +5,42 @@
       <el-button v-if="userType === 'teacher' || userType === 'admin'" size="mini" type="primary" class="mr-5 my-auto"
         @click="publishActivity">发布活动</el-button>
     </el-header>
-    <el-main class="flex justify-center">
-      <el-table :data="activities" style="width: 80%" height="700">
-        <el-table-column prop="title" label="活动名称" width="120">
-          <template #default="{ row }">
-            <el-button link size="small" class="p-2" type="primary" @click="viewActivity(row.activityId)">{{ row.title
-            }}</el-button>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column prop="description" label="活动描述"></el-table-column> -->
-        <el-table-column label="活动描述" min-width="300">
-          <template #default="{ row }">
-            <div class="description-ellipsis">{{ row.description.length > 90 ? row.description.substring(0, 88) + "......"
-              : row.description }}</div>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column prop="creationTime" label="创建时间"></el-table-column> -->
-        <el-table-column prop="beginTime" label="开始时间" width="120"></el-table-column>
-        <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
-        <el-table-column label="操作" width="150">
-          <template #default="{ row }">
-            <el-button v-if="userType === 'student'" link size="small" class="p-2" type="primary" @click="clickSignUp(row)">报名</el-button>
+    <el-main class="flex justify-center w-full">
+      <el-card class="p-10 mx-20 w-full">
 
-            <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
-              link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
+        <el-table :data="activities" style="width: 100%" height="600">
+          <el-table-column prop="title" label="活动名称" width="120">
+            <template #default="{ row }">
+              <el-button link size="small" class="p-2" type="primary" @click="viewActivity(row.activityId)">{{ row.title
+              }}</el-button>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column prop="description" label="活动描述"></el-table-column> -->
+          <el-table-column label="活动描述" min-width="300">
+            <template #default="{ row }">
+              <div class="description-ellipsis">{{ row.description.length > 90 ? row.description.substring(0, 88) +
+                "......"
+                : row.description }}</div>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column prop="creationTime" label="创建时间"></el-table-column> -->
+          <el-table-column prop="beginTime" label="开始时间" width="120"></el-table-column>
+          <el-table-column prop="endTime" label="结束时间" width="120"></el-table-column>
+          <el-table-column label="操作" width="150">
+            <template #default="{ row }">
+              <el-button v-if="userType === 'student'" link size="small" class="p-2" type="primary"
+                @click="clickSignUp(row)">报名</el-button>
 
-            <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
-              link size="small" class="p-2" type="primary" @click="editActivity(row.activityId)">修改活动</el-button>
+              <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
+                link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
 
-          </template>
-        </el-table-column>
-      </el-table>
+              <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
+                link size="small" class="p-2" type="primary" @click="editActivity(row.activityId)">修改活动</el-button>
+
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
     </el-main>
   </el-container>
 

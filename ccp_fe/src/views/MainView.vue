@@ -35,7 +35,7 @@
                 </el-icon>
                 <span>帖子列表</span>
               </el-menu-item>
-              <el-menu-item v-if="student.studentId || teacher.teacherId || admin.adminId" index="/post/publish">
+              <el-menu-item v-if="userType !== ''" index="/post/publish">
                 <el-icon>
                   <Plus />
                 </el-icon>

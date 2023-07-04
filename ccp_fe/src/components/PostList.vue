@@ -1,15 +1,17 @@
 <template>
-  <el-scrollbar height="">
+  <el-scrollbar class="h-full">
     <div class="flex justify-between">
       <el-divider content-position="right">
-        <el-switch v-model="switchOnlyMe" active-text="只看我" class="ml-5" @change="checkSwitchState(1), fetchPosts()" />
-        <el-switch v-model="switchOnlyStudent" active-text="只看学生" class="ml-5"
-          @change="checkSwitchState(2), fetchPosts()" />
+        <el-switch v-model="switchOnlyMe" active-text="只看我" class="ml-5" @change="checkSwitchState(1)" />
+        <el-switch v-model="switchOnlyStudent" active-text="只看学生" class="ml-5" @change="checkSwitchState(2)" />
         <el-switch v-if="props.userType === 'admin'" v-model="switchReview" active-text="审核" class="ml-5"
-          @change="reviewPostModel()"></el-switch>
+          @change="checkSwitchState(3)"></el-switch>
       </el-divider>
     </div>
-    <div class="masonry">
+    <div v-if="posts.length === 0">
+      <el-empty description="没有符合条件的帖子" />
+    </div>
+    <div v-else class="masonry">
       <el-col v-for="post in posts" :key="post.postId" class="masonry-item min-w-184px">
         <el-card class="my-4 cursor-pointer" :body-style="{ padding: '0px' }" @click="openPost(post)">
           <template v-slot:header>
@@ -51,10 +53,15 @@
               <el-button v-else type="primary" @click="publishPost(currentPost)">去修改</el-button>
             </div>
             <div v-else-if="props.userType === 'admin'" class="mx-5">
-              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 3" type="success"
-                @click="reviewPost(1)">审核通过</el-button>
+              <!-- <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 3" type="success"
+                @click="reviewPost(0)">审核通过</el-button>
               <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 2" type="danger"
-                @click="reviewPost(2)">审核不通过</el-button>
+                @click="reviewPost(1)">审核不通过</el-button>
+              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 4" type="warning"
+                @click="reviewPost(2)">改为待审核</el-button> -->
+              <el-button type="success" @click="reviewPost(0)">审核通过</el-button>
+              <el-button type="danger" @click="reviewPost(1)">审核不通过</el-button>
+              <el-button type="warning" @click="reviewPost(2)">改为待审核</el-button>
             </div>
           </div>
         </div>
@@ -70,7 +77,8 @@
       <el-divider />
       <el-form :model="commentForm" label-width="60px" :disabled="props.userType === ''">
         <el-form-item label="评论">
-          <el-input v-model="commentForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100" show-word-limit></el-input>
+          <el-input v-model="commentForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100"
+            show-word-limit></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitComment()">{{ props.userType === '' ? "请先登录" : "发表评论" }}</el-button>
@@ -118,7 +126,8 @@
       :before-close="handleReplyClose" class="bg-gradient-to-b from-red-300 to-blue-200">
       <el-form :model="replyForm" label-width="60px" :disabled="props.userType === ''">
         <el-form-item label="评论">
-          <el-input v-model="replyForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100" show-word-limit></el-input>
+          <el-input v-model="replyForm.content" type="textarea" :rows="3" placeholder="请输入内容" :maxlength="100"
+            show-word-limit></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitReply()">{{ props.userType === '' ? "请先登录" : "发表评论" }}</el-button>
@@ -211,23 +220,38 @@ const fetchPosts = async () => {
     // 筛选未审核/审核不通过/草稿 且 不是自己的帖子
     posts.value = posts.value.filter(post => !(post.state !== 0 && post.state !== 2 && post.userId !== props.userId))
   }
+
+  if (switchReview.value) { // 确认审核
+    posts.value = posts.value.filter(post => post.state === 1);
+    return;
+  }
 }
 
-const checkSwitchState = (id: number) => {
-  if (id === 1) {
+const checkSwitchState = (flag: number) => {
+  if (flag === 1) {
     if (switchOnlyMe.value) { // 确认只看我
       if (!props.userType) {
         ElMessage.warning('请先登录')
-        switchOnlyMe.value = false
-      } else {
-        switchOnlyStudent.value = false
+        switchOnlyMe.value = false;
+        return;
+      }
+
+      if (props.userType !== 'student') {
+        switchOnlyStudent.value = false;
       }
     }
-  } else {
+  } else if (flag === 2) {
     if (switchOnlyStudent.value) { // 确认只看学生
-      switchOnlyMe.value = false
+      if (props.userType !== 'student') {
+        console.log('props.userType', props.userType)
+        switchOnlyMe.value = false;
+      }
     }
+  } else if (flag === 3) {
+    //
   }
+
+  fetchPosts();
 }
 
 const openPost = async (post: post) => {
@@ -345,25 +369,27 @@ const publishPost = (post: post) => {
   })
 }
 
-const reviewPostModel = () => {
-  if (switchReview.value) {
-    posts.value = posts.value.filter(post => post.state === 1)
-  } else {
-    fetchPosts()
-  }
-}
-
 const reviewPost = async (flag: number) => {
   const reviewParams = {
     postId: currentPost.value?.postId,
-    state: flag,
+    status: flag,  // 审核形式：0-审核通过，1-审核不通过, 2-待审核
     adminId: localStorage.getItem('userId'),
   }
+  console.log(reviewParams)
   const res = await Http.post('/reviewPost', reviewParams);
   if (res) {
-    ElMessage.success('审核成功')
+    if (reviewParams.status === 0) {
+      ElMessage.success('审核通过');
+    } else if (reviewParams.status === 1) {
+      ElMessage.warning('审核不通过');
+    } else {
+      ElMessage.info('修改为待审核状态');
+    }
     await fetchPosts()
-    drawer.value = false
+    if (switchReview.value) {
+      posts.value = posts.value.filter(post => post.state === 1)
+    }
+    // drawer.value = false
   } else {
     ElMessage.error('审核失败')
   }

@@ -29,8 +29,8 @@ export interface LoginForm {
 export interface NewActivityForm {
   title: string;
   description: string;
-  beginTime: Date;
-  endTime: Date;
+  beginTime: Date | null;
+  endTime: Date | null;
 }
 
 export interface post {

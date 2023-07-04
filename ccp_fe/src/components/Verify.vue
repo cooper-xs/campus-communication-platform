@@ -33,7 +33,7 @@
     </el-card>
   </div>
   <el-dialog v-model="verifyDialogVisible" title="确定" width="30%">
-    <span>确认发布?</span>
+    <span>确认提交?</span>
     <template #footer>
       <el-button @click="verifyDialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="verifyDialogVisible = false, submitForm()">确定</el-button>

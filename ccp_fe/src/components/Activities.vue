@@ -29,7 +29,7 @@
           <el-table-column label="操作" width="150">
             <template #default="{ row }">
               <el-button v-if="userType === 'student'" link size="small" class="p-2" type="primary"
-                @click="clickSignUp(row)">报名</el-button>
+                @click="clickSignUp(row)">{{ row.signUpFlag === true ? '已报名' : '报名' }}</el-button>
 
               <el-button v-if="(userType === 'teacher' && row.teacherId === teacher?.teacherId) || (userType === 'admin')"
                 link size="small" class="p-2" type="primary" @click="approveActivity(row.activityId)">批准报名</el-button>
@@ -50,7 +50,7 @@
       <el-table-column prop="item" label="" width="120"></el-table-column>
       <el-table-column label="">
         <template #default="{ row }">
-          <el-input v-model="row.info"></el-input>
+          <el-input v-model="row.info" disabled></el-input>
         </template>
       </el-table-column>
     </el-table>
@@ -112,6 +112,20 @@ onMounted(async () => {
     activity.beginTime = timeDiff(activity.beginTime);
     activity.endTime = timeDiff(activity.endTime);
   });
+  // 检查是否已经报名
+  activities.value.forEach(async (activity: any) => {
+    const signUpflag = await Http.get('/getSignUpFlag', {
+      params: {
+        activityId: activity.activityId,
+        studentId: props.student?.studentId,
+      }
+    })
+    if (signUpflag) {
+      activity.signUpFlag = true;
+    } else {
+      activity.signUpFlag = false;
+    }
+  })
 });
 
 const viewActivity = async (id: number) => {
@@ -143,16 +157,10 @@ const clickSignUp = async (row: any) => {
 };
 
 const signUpActivity = async () => {
-  personalInfo.value.forEach((info: any) => {
-    if (info.info === '') {
-      ElMessageBox.alert('请填写完整信息', '提示', {
-        confirmButtonText: '确定',
-        callback: () => {
-          dialogVisible.value = true;
-        }
-      });
-    }
-  })
+  if(personalInfo.value[0].info === '' || personalInfo.value[1].info === '') {
+    ElMessage.error('请填写完整个人信息');
+    return;
+  }
   const res = await Http.post('/signUpActivity', {
     activityId: selectedActivity.value.activityId,
     studentId: props.student?.studentId,

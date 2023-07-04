@@ -122,7 +122,6 @@ const toActivities = () => {
   router.push('/home/activities');
 }
 
-
 const clickSubmitForm = () => {
   if (!props.teacher) {
     ElMessage.error('请先登录');

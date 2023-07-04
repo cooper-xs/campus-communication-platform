@@ -246,4 +246,14 @@ export default class IdentityController {
       this.ctx.status = 400;
     }
   }
+
+  public async getAdminById() {
+    const adminIdt = this.ctx.query.adminId;
+
+    const adminId = tool.toNumber(adminIdt) as number;
+
+    const res = await this._administratorsService.findAdministratorById(adminId);
+
+    return res;
+  }
 }

@@ -8,7 +8,7 @@
         }} 同学</el-button>
         <el-button v-if="teacher.teacherId" type="text" class="text-white mr-4" @click="router.push('/')">{{ teacher.name
         }} 老师</el-button>
-        <el-button v-if="admin.adminId" type="text" class="text-white mr-4" @click="router.push('/')">{{ student.nickName
+        <el-button v-if="admin.adminId" type="text" class="text-white mr-4" @click="router.push('/')">{{ admin.name
         }}</el-button>
         <el-button type="text" class="text-white pr-4" @click="logout">退出</el-button>
       </div>
@@ -35,7 +35,7 @@
                 </el-icon>
                 <span>帖子列表</span>
               </el-menu-item>
-              <el-menu-item v-if="userType !== ''" index="/post/publish">
+              <el-menu-item v-if="userType !== '' && userType !== 'admin'" index="/post/publish">
                 <el-icon>
                   <Plus />
                 </el-icon>
@@ -45,7 +45,7 @@
                 <el-icon>
                   <View />
                 </el-icon>
-                <span>审核帖子</span>
+                <span>审核记录</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
@@ -235,4 +235,5 @@ function handleMenuSelect(index: string) {
 .aside {
   width: 200px;
   background-color: #f5f7fa;
-}</style>
+}
+</style>

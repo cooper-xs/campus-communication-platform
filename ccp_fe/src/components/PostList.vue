@@ -53,15 +53,10 @@
               <el-button v-else type="primary" @click="publishPost(currentPost)">去修改</el-button>
             </div>
             <div v-else-if="props.userType === 'admin'" class="mx-5">
-              <!-- <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 3" type="success"
-                @click="reviewPost(0)">审核通过</el-button>
-              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 2" type="danger"
-                @click="reviewPost(1)">审核不通过</el-button>
-              <el-button :disabled="currentPost.state !== 1 && currentPost.state !== 4" type="warning"
-                @click="reviewPost(2)">改为待审核</el-button> -->
               <el-button type="success" @click="reviewPost(0)">审核通过</el-button>
               <el-button type="danger" @click="reviewPost(1)">审核不通过</el-button>
-              <el-button type="warning" @click="reviewPost(2)">改为待审核</el-button>
+              <!-- <el-button type="warning" @click="reviewPost(2)">改为待审核</el-button> -->
+              <el-button type="warning" @click="replaceSensitiveWord(currentPost)">屏蔽敏感词</el-button>
             </div>
           </div>
         </div>
@@ -145,6 +140,8 @@ import Http from '@/utils/Http';
 import timeDiff from '@/utils/timeDiff';
 import timeUsual from '@/utils/timeUsual';
 import router from '@/router';
+import sensitiveWords from '@/utils/sensitiveWords'
+import replace from '@/utils/replace'
 
 const props = defineProps({
   userType: {
@@ -393,7 +390,26 @@ const reviewPost = async (flag: number) => {
   } else {
     ElMessage.error('审核失败')
   }
-} 
+}
+
+// 替换敏感词
+const replaceSensitiveWord = async (post: post) => {
+  const content = replace(post.content, sensitiveWords);
+  const title = replace(post.title, sensitiveWords);
+  const postParams = {
+    postId: post.postId,
+    title,
+    content,
+  }
+  await Http.post('/updatePost', postParams)
+    .then(res => {
+      currentPost.value = res as any
+      ElMessage.success('替换成功')
+      fetchPosts()
+    }).catch(err => {
+      ElMessage.error('替换失败')
+    })
+}
 </script>
 
 <style scoped>

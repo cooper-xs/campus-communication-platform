@@ -57,6 +57,12 @@ const routes: IRoute[] = [
     action: 'findTeacherById',
   },
   {
+    method: 'get',
+    path: '/getAdminById',
+    controller: IdentityController,
+    action: 'getAdminById',
+  },
+  {
     method: 'post',
     path: '/updateProfile',
     controller: IdentityController,

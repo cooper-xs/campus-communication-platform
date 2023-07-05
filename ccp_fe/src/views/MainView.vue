@@ -41,11 +41,17 @@
                 </el-icon>
                 <span>发布帖子</span>
               </el-menu-item>
-              <el-menu-item v-if="admin.adminId" index="/post/review">
+              <el-menu-item v-if="admin.adminId" index="/post/reviewList">
                 <el-icon>
                   <View />
                 </el-icon>
                 <span>审核记录</span>
+              </el-menu-item>
+              <el-menu-item v-if="admin.adminId" index="/post/top">
+                <el-icon>
+                  <Top />
+                </el-icon>
+                <span>审批置顶</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>

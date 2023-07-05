@@ -72,38 +72,6 @@ export default class PostController {
     return res;
   }
 
-  public async reviewPost() {
-    const { postId, status, adminId } = this.ctx.request.body as {
-      postId: number;
-      status: number; // 审核形式：0-审核通过，1-审核不通过, 2-待审核
-      adminId: number;
-    };
-
-    let state = 0;
-
-    if (status === 0) {
-      state = 2;
-    } else if (status === 1) {
-      state = 3;
-    } else if (status === 2) {
-      state = 1;
-    }
-
-    const creationTime = new Date();
-    creationTime.setSeconds(creationTime.getSeconds() - 1);
-
-    const res = await this._postsService.reviewPost(postId, state);
-
-    const postReview = await this._postReviewService.addPostReview({
-      postId,
-      adminId,
-      state,
-      creationTime,
-    });
-
-    return { res, postReview };
-  }
-
   public async getPosts() {
     const { userType, userId } = this.ctx.query as {
       userType: string;
@@ -228,7 +196,7 @@ export default class PostController {
   public async addPostReview() {
     const { postId, adminId, status } = this.ctx.request.body as {
       postId: number;
-      adminId: string;
+      adminId: string; // 审核形式：0-审核通过，1-审核不通过, 2-待审核
       status: number;
     };
 
@@ -237,26 +205,26 @@ export default class PostController {
 
     let flag = 0;
 
-    if (status === 0) {
+    if (status === 0) { // 审核通过
       const res = await this._postsService.passPost(postId);
-      flag = res.affectedRows;
-    } else if (status === 1) {
+      flag = res ? 1 : 0;
+    } else if (status === 1) { // 审核不通过
       const res = await this._postsService.rejectPost(postId);
-      flag = res.affectedRows;
-    } else if (status === 2) {
+      flag = res ? 1 : 0;
+    } else if (status === 2) { // 改为待审核
       const res = await this._postsService.waittingReviewPost(postId);
-      flag = res.affectedRows;
+      flag = res ? 1 : 0;
     } else {
       this.ctx.status = 400;
     }
 
     if (flag) {
-      const res = await this._postReviewService.addPostReview({
+      const res = await this._postReviewService.addPostReview(
         postId,
         adminId,
         status,
-        creationTime,
-      });
+        creationTime
+      );
       return res;
     } else {
       this.ctx.status = 400;
@@ -308,11 +276,20 @@ export default class PostController {
 
     res.filter((item) => {
       return item.state === 1 && item.endTime > new Date();
-
     });
 
     return res.map((item) => {
       return item.postId;
     });
+  }
+
+  public async getReviews() {
+    const res = await this._postReviewService.getPostReviews();
+    return res;
+  }
+
+  public async getTopRequests() {
+    const res = await this._toprequestsService.getTopRequests();
+    return res;
   }
 }

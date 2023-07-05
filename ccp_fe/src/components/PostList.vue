@@ -135,7 +135,8 @@
     </el-drawer>
   </el-drawer>
   <el-dialog v-model="applyForTopVisible" title="申请置顶" width="40%" :z-index="1100">
-    <span>请确认置顶信息</span>
+    <span>请确认置顶信息</span><br/>
+    <span>提示: 多次申请置顶将覆盖之前的置顶信息</span>
     <el-table :data="topInfo" style="width: 100%">
       <el-table-column prop="item" label="" width="120"></el-table-column>
       <el-table-column label="">
@@ -147,7 +148,7 @@
     </el-table>
     <template #footer>
       <el-button @click="applyForTopVisible = false">取 消</el-button>
-      <el-button type="primary" @click="applyForTop()">确定</el-button>
+      <el-button type="primary" @click="applyForTop()">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -423,7 +424,7 @@ const reviewPost = async (flag: number) => {
     adminId: localStorage.getItem('userId'),
   }
   console.log(reviewParams)
-  const res = await Http.post('/reviewPost', reviewParams);
+  const res = await Http.post('/addPostReview', reviewParams);
   if (res) {
     if (reviewParams.status === 0) {
       ElMessage.success('审核通过');
@@ -483,12 +484,16 @@ const clickApplyForTop = (post: post) => {
 }
 
 const applyForTop = async () => {
-  topInfo.value.forEach((element) => {
-    if (element.info === '') {
-      ElMessage.warning('请填写完整信息')
-      return
-    }
-  })
+  // topInfo.value.forEach((element) => {
+  //   if (element.info === '') {
+  //     ElMessage.warning('请填写完整信息')
+  //     return
+  //   }
+  // })
+  if(topInfo.value[2].info === '') {
+    ElMessage.warning('请填写完整信息')
+    return
+  }
 
   // 申请结束时间不能早于当前时间
   if (new Date(topInfo.value[2].info as any).getTime() < new Date().getTime()) {

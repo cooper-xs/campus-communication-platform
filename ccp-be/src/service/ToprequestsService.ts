@@ -13,6 +13,7 @@ export default class ToprequestsService {
       userType,
       creationTime,
       endTime,
+      state: 0,
     });
     await TopRequestsRepository.save(topRequest);
     return topRequest;
@@ -27,6 +28,7 @@ export default class ToprequestsService {
     if (topRequest) {
       topRequest.adminId = adminId;
       topRequest.state = state;
+      topRequest.endTime = endTime;
       await TopRequestsRepository.save(topRequest);
       return topRequest;
     }

@@ -7,7 +7,6 @@
     </el-header>
     <el-main class="flex justify-center w-full">
       <el-card class="p-10 mx-20 w-full">
-
         <el-table :data="activities" style="width: 100%" height="600">
           <el-table-column prop="title" label="活动名称" width="120">
             <template #default="{ row }">

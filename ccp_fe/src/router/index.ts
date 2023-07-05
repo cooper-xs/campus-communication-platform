@@ -56,9 +56,14 @@ const router = createRouter({
               component: () => import('@/components/PostPublish.vue'),
             },
             {
-              path: 'review',
-              name: 'Review',
-              component: () => import('@/components/PostList.vue'),
+              path: 'reviewList',
+              name: 'ReviewList',
+              component: () => import('@/components/ReviewList.vue'),
+            },
+            {
+              path: 'top',
+              name: 'Top',
+              component: () => import('@/components/Top.vue'),
             }
           ]
         },

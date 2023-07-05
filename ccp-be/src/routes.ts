@@ -81,15 +81,20 @@ const routes: IRoute[] = [
     path: '/updatePost',
     controller: PostController,
     action: 'updatePost',
-    // needLogin: true,
   },
   {
     method: 'post',
-    path: '/reviewPost',
+    path: '/addPostReview',
     controller: PostController,
-    action: 'reviewPost',
-    // needLogin: true,
+    action: 'addPostReview',
   },
+  {
+    method: 'get',
+    path: '/getReviews',
+    controller: PostController,
+    action: 'getReviews',
+  },
+
   {
     method: 'get',
     path: '/getPosts',
@@ -134,18 +139,6 @@ const routes: IRoute[] = [
   },
   {
     method: 'post',
-    path: '/addPostReview',
-    controller: PostController,
-    action: 'addPostReview',
-  },
-  {
-    method: 'post',
-    path: '/reviewPost',
-    controller: PostController,
-    action: 'reviewPost',
-  },
-  {
-    method: 'post',
     path: '/applyForTop',
     controller: PostController,
     action: 'applyForTop',
@@ -161,6 +154,18 @@ const routes: IRoute[] = [
     path: '/getTopPostIds',
     controller: PostController,
     action: 'getTopPostIds',
+  },
+  {
+    method: 'get',
+    path: '/getTopRequests',
+    controller: PostController,
+    action: 'getTopRequests',
+  },
+  {
+    method: 'post',
+    path: '/reviewTopRequest',
+    controller: PostController,
+    action: 'setTop',
   },
   
   

@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import type { updatePost } from "../types";
+import type { topRequest, updatePost } from "../types";
 import PostsService from "../service/PostsService";
 import CommentsService from "../service/CommentsService";
 import { tool } from "../utils/tool";
@@ -272,13 +272,14 @@ export default class PostController {
   }
 
   public async getTopPostIds() {
-    const res = await this._toprequestsService.getTopRequests();
+    const res = await this._toprequestsService.getTopRequests() as topRequest[];
 
-    res.filter((item) => {
+    const filterRes = res.filter((item) => {
+      console.log(item.state)
       return item.state === 1 && item.endTime > new Date();
     });
 
-    return res.map((item) => {
+    return filterRes.map((item) => {
       return item.postId;
     });
   }

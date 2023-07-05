@@ -29,3 +29,14 @@ export interface verifyItems {
   pid: string;
   academy: string;
 }
+
+export interface topRequest {
+  requestId?: number;
+  postId: number;
+  endTime: Date;
+  creationTime?: Date;
+  userId?: number;
+  userType?: string;
+  adminId?: number;
+  state?: number;
+}

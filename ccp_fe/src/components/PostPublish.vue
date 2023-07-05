@@ -94,6 +94,7 @@ const currentPost = ref<post>({
   creationTime: new Date(),
   state: 0,
   nickName: '',
+  isTop: false,
 })
 const pushPostDialogVisible = ref(false);
 

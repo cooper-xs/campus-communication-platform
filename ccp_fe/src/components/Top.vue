@@ -81,7 +81,7 @@ const reviewTopRequest = async (row: any, flag: number) => {
     requestId: row.requestId,
     adminId: props.admin?.adminId,
     endTime: row.endTime,
-    state: flag + 1,
+    state: flag,
   });
   if (res) {
     fetchTopRequests();

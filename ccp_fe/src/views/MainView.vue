@@ -102,7 +102,7 @@
             </el-menu-item-group>
           </el-sub-menu>
 
-          <el-sub-menu v-if="admin.adminId !== ''" index="4">
+          <!-- <el-sub-menu v-if="admin.adminId !== ''" index="4">
             <template #title>
               <el-icon>
                 <Setting />
@@ -123,7 +123,7 @@
                 <span>管理员管理</span>
               </el-menu-item>
             </el-menu-item-group>
-          </el-sub-menu>
+          </el-sub-menu> -->
         </el-menu>
       </el-aside>
 
@@ -226,20 +226,33 @@ function handleMenuSelect(index: string) {
 
 <style scoped>
 .header {
+  position: fixed; /* Fix the position */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  right: 0; /* Stretch to the right */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: #743ef1; */
   color: #ffffff;
   padding: 0 20px;
+  z-index: 1000; /* Ensure the header is on top of other content */
+}
+
+.aside {
+  position: fixed; /* Fix the position */
+  top: 60px; /* Offset from the top equal to the header's height */
+  left: 0; /* Align to the left */
+  width: 200px;
+  background-color: #f5f7fa;
+  z-index: 500; /* Ensure the aside is below the header */
+}
+
+.el-main {
+  padding-top: 100px; /* Add a left padding equal to the aside's width */
+  padding-left: 240px; /* Add a left padding equal to the aside's width */
 }
 
 .logo {
   font-size: 1.5rem;
-}
-
-.aside {
-  width: 200px;
-  background-color: #f5f7fa;
 }
 </style>

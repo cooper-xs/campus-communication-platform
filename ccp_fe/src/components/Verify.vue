@@ -6,7 +6,7 @@
       </template>
     </el-result>
   </div>
-  <div v-else class="flex justify-center items-center h-200">
+  <div v-else class="flex justify-center items-center h-160">
     <el-card class="p-10 pr-30">
       <el-form :model="form" label-width="120px">
         <el-form-item label="学院">

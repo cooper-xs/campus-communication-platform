@@ -35,11 +35,11 @@
     </div>
 
   </el-scrollbar>
+  <!-- 当前文章 -->
   <el-drawer v-if="currentPost" v-model="drawer" :title="'发帖人: ' + currentPost.nickName" size="50%" z-index="1000"
     :before-close="handleClose" class="bg-gradient-to-b from-red-300 to-blue-200">
     <el-scrollbar height="">
       <div class="p-2">
-        <!-- <el-divider /> -->
         <div class="flex justify-between">
           <div class="p-3 font-bold">
             {{ currentPost.title }}

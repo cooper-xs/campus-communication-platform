@@ -19,17 +19,27 @@ export class Toprequests {
   @Column("int", { name: "PostID", nullable: true })
   postId: number | null;
 
+  @Column("datetime", { name: "EndTime", nullable: true })
+  endTime: Date | null;
+
   @Column("datetime", { name: "CreationTime", nullable: true })
   creationTime: Date | null;
 
   @Column("int", { name: "UserID", nullable: true })
   userId: number | null;
 
+  @Column("varchar", { name: "UserType", nullable: true, length: 255 })
+  userType: string | null;
+
   @Column("int", { name: "AdminID", nullable: true })
   adminId: number | null;
 
-  @Column("varchar", { name: "State", nullable: true, length: 255 })
-  state: string | null;
+  @Column("tinyint", {
+    name: "State",
+    nullable: true,
+    comment: "0: 待批准, 1: 已批准, 2: 已否决",
+  })
+  state: number | null;
 
   @ManyToOne(() => Posts, (posts) => posts.toprequests, {
     onDelete: "CASCADE",

@@ -17,11 +17,12 @@
           <template v-slot:header>
             <div class="flex justify-between">
               <span class="font-bold">{{ post.title }}</span>
-              <div>
+              <div class="flex flex-col justify-center items-center">
                 <el-tag v-if="post.state === 1" type="warning">待审核</el-tag>
                 <el-tag v-else-if="post.state === 3" type="danger">审核未通过</el-tag>
                 <el-tag v-else-if="post.state === 4" type="info">草稿未发布</el-tag>
-                <el-tag v-if="post.userType === 'teacher'" class="ml-3">老师帖</el-tag>
+                <el-tag v-if="post.userType === 'teacher'" class="ml-3 my-1">老师</el-tag>
+                <el-tag v-if="post.isTop" class="ml-3 my-1" type="danger">置顶</el-tag>
               </div>
             </div>
           </template>
@@ -47,10 +48,13 @@
             <el-tag v-if="currentPost.state === 1" type="warning">待审核</el-tag>
             <el-tag v-else-if="currentPost.state === 3" type="danger">审核未通过</el-tag>
             <el-tag v-else-if="currentPost.state === 4" type="info">草稿未发布</el-tag>
+            <el-tag v-if="currentPost.isTop" class="ml-3 my-1" type="danger">置顶</el-tag>
             <div v-if="currentPost.userType === props.userType && currentPost.userId === props.userId" class="mx-5">
               <el-button type="danger" @click="deletePost">删除</el-button>
               <el-button v-if="currentPost.state === 4" type="primary" @click="publishPost(currentPost)">去发布</el-button>
               <el-button v-else type="primary" @click="publishPost(currentPost)">去修改</el-button>
+              <el-button type="warning" :disabled="currentPost.isTop"
+                @click="clickApplyForTop(currentPost)">申请置顶</el-button>
             </div>
             <div v-else-if="props.userType === 'admin'" class="mx-5">
               <el-button type="success" @click="reviewPost(0)">审核通过</el-button>
@@ -130,6 +134,22 @@
       </el-form>
     </el-drawer>
   </el-drawer>
+  <el-dialog v-model="applyForTopVisible" title="申请置顶" width="40%" :z-index="1100">
+    <span>请确认置顶信息</span>
+    <el-table :data="topInfo" style="width: 100%">
+      <el-table-column prop="item" label="" width="120"></el-table-column>
+      <el-table-column label="">
+        <template #default="{ row }">
+          <el-date-picker v-if="row.item === '置顶结束时间'" v-model="row.info" type="datetime"></el-date-picker>
+          <el-input v-else v-model="row.info" disabled></el-input>
+        </template>
+      </el-table-column>
+    </el-table>
+    <template #footer>
+      <el-button @click="applyForTopVisible = false">取 消</el-button>
+      <el-button type="primary" @click="applyForTop()">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -197,8 +217,18 @@ const initReplyForm: reply = {
 }
 const replyForm = reactive({ ...initReplyForm });
 
-const currentCommentId = ref('')
-const currentReplyObj = ref<reply | comment>()
+const currentCommentId = ref('');
+const currentReplyObj = ref<reply | comment>();
+const applyForTopVisible = ref(false);
+
+const topInfo = ref([
+  // { item: "帖子id", info: '' },
+  // { item: "发帖人id", info: '' },
+  // { item: "发帖人身份", info: '' },
+  { item: "帖子标题", info: '' },
+  { item: "申请人姓名", info: '' },
+  { item: "置顶结束时间", info: null },
+]);
 
 onMounted(() => {
   fetchPosts()
@@ -222,6 +252,26 @@ const fetchPosts = async () => {
     posts.value = posts.value.filter(post => post.state === 1);
     return;
   }
+
+  // 检查置顶状态
+  const topList = await Http.get('/getTopPostIds') as any;
+  console.log('topList', topList)
+
+  // 遍历posts，设置isTop属性
+  posts.value.forEach(post => {
+    post.isTop = topList.includes(post.postId);
+  });
+
+  // 对posts排序，将isTop===true的post排在前面
+  posts.value.sort((a, b) => {
+    if (a.isTop && !b.isTop) {
+      return -1;
+    } else if (!a.isTop && b.isTop) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 }
 
 const checkSwitchState = (flag: number) => {
@@ -396,10 +446,16 @@ const reviewPost = async (flag: number) => {
 const replaceSensitiveWord = async (post: post) => {
   const content = replace(post.content, sensitiveWords);
   const title = replace(post.title, sensitiveWords);
+  const flag = post.title === title && post.content === content;
+  if (flag) {
+    ElMessage.info('无敏感词可替换')
+    return;
+  }
   const postParams = {
     postId: post.postId,
     title,
     content,
+    creationTime: post.creationTime,
   }
   await Http.post('/updatePost', postParams)
     .then(res => {
@@ -408,6 +464,52 @@ const replaceSensitiveWord = async (post: post) => {
       fetchPosts()
     }).catch(err => {
       ElMessage.error('替换失败')
+    })
+}
+
+const clickApplyForTop = (post: post) => {
+  if(post.state === 1 || post.state === 3) {
+    ElMessage.warning('该帖子尚未通过审核，无法申请置顶');
+    return
+  } else if(post.state === 4) {
+    ElMessage.warning('请先发布帖子');
+    return
+  }
+
+  topInfo.value[0].info = post.title
+  topInfo.value[1].info = post.nickName
+  topInfo.value[2].info = ''
+  applyForTopVisible.value = true
+}
+
+const applyForTop = async () => {
+  topInfo.value.forEach((element) => {
+    if (element.info === '') {
+      ElMessage.warning('请填写完整信息')
+      return
+    }
+  })
+
+  // 申请结束时间不能早于当前时间
+  if (new Date(topInfo.value[2].info as any).getTime() < new Date().getTime()) {
+    ElMessage.warning('结束时间不能早于当前时间')
+    return
+  }
+
+  const applyForTopParams = {
+    postId: currentPost.value?.postId,
+    userId: props.userId,
+    userType: props.userType,
+    endTime: topInfo.value[2].info,
+  }
+
+  await Http.post('/applyForTop', applyForTopParams)
+    .then(res => {
+      ElMessage.success('申请成功')
+      fetchPosts();
+      applyForTopVisible.value = false
+    }).catch(err => {
+      ElMessage.error('申请失败')
     })
 }
 </script>

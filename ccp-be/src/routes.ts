@@ -144,6 +144,24 @@ const routes: IRoute[] = [
     controller: PostController,
     action: 'reviewPost',
   },
+  {
+    method: 'post',
+    path: '/applyForTop',
+    controller: PostController,
+    action: 'applyForTop',
+  },
+  {
+    method: 'post',
+    path: '/setTop',
+    controller: PostController,
+    action: 'setTop',
+  },
+  {
+    method: 'get',
+    path: '/getTopPostIds',
+    controller: PostController,
+    action: 'getTopPostIds',
+  },
   
   
   // 活动

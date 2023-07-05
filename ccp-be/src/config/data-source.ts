@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   ],
 });
 
-export const TopRequestsRepository = AppDataSource.getRepository("TopRequests");
+export const TopRequestsRepository = AppDataSource.getRepository("Toprequests");
 export const PostReviewRepository = AppDataSource.getRepository("Postreview");
 export const ReplyRepository = AppDataSource.getRepository("Reply");
 export const RegistrationsRepository = AppDataSource.getRepository("Registrations");

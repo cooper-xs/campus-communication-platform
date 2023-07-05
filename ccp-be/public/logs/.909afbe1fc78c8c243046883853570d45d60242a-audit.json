@@ -54,6 +54,11 @@
             "date": 1688469064513,
             "name": "public\\logs\\app-2023-07-04.log",
             "hash": "8007365cf0992bf48d005aff96327d159db6c4f87a839313a8226a743d339aad"
+        },
+        {
+            "date": 1688519426716,
+            "name": "public\\logs\\app-2023-07-05.log",
+            "hash": "31ead90fcf583c3f1b0ef8f17da29deae585812a5b725ccfa6fccb181e04abe7"
         }
     ],
     "hashType": "sha256"

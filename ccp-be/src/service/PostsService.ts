@@ -42,6 +42,9 @@ export default class PostsService {
   public async getPostsByUserTypeAndId(userType: string, userId: string) {
     const posts = await PostsRepository.find({
       where: { userType, userId },
+      order: {
+        creationTime: "DESC",
+      },
     });
     return posts;
   }
@@ -49,6 +52,9 @@ export default class PostsService {
   public async getPostsByUserType(userType: string) {
     const posts = await PostsRepository.find({
       where: { userType },
+      order: {
+        creationTime: "DESC",
+      },
     });
     return posts;
   }

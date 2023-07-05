@@ -43,6 +43,7 @@ export interface post {
   creationTime: Date;
   state: number;
   nickName: string;
+  isTop: boolean;
 }
 
 export interface comment {

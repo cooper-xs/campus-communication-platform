@@ -3,6 +3,7 @@
     <el-result icon="success" title="提交成功" sub-title='可在 "帖子列表" 选择 "只看我" 中找到'>
       <template #extra>
         <el-button type="primary" @click="toPosts">前往</el-button>
+        <el-button type="primary" @click="reSubmit">再发一篇</el-button>
       </template>
     </el-result>
   </div>
@@ -150,6 +151,7 @@ const submitForm = async (flag: number) => {
     userId: props.userId,
     nickName: props.nickName,
     state,
+    creationTime: currentPost.value.creationTime ?? null,
   }
 
   try {
@@ -210,5 +212,18 @@ const beforeUpload = (file: File) => {
 
 const toPosts = () => {
   router.push('/home/post/list');
+};
+
+const reSubmit = () => {
+  router.push('/home/post/publish');
+  submited.value = false;
+  //  删去路由中的参数, 删去表格中多余的值
+  currentPost.value.postId = '';
+  currentPost.value.title = '';
+  currentPost.value.content = '';
+  currentPost.value.postImg = '';
+  form.value.title = '';
+  form.value.content = '';
+  form.value.postImg = '';
 };
 </script>

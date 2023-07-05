@@ -5,12 +5,14 @@ import CommentsService from "../service/CommentsService";
 import { tool } from "../utils/tool";
 import ReplyService from "../service/ReplyService";
 import PostReviewService from "../service/PostReviewService";
+import ToprequestsService from "../service/ToprequestsService";
 
 export default class PostController {
   private readonly _postsService: PostsService;
   private readonly _commentsService: CommentsService;
   private readonly _replyService: ReplyService;
   private readonly _postReviewService: PostReviewService;
+  private readonly _toprequestsService: ToprequestsService;
 
   public constructor(private readonly ctx: Context) {
     this.ctx = ctx;
@@ -18,10 +20,11 @@ export default class PostController {
     this._commentsService = new CommentsService(this.ctx);
     this._replyService = new ReplyService(this.ctx);
     this._postReviewService = new PostReviewService(this.ctx);
+    this._toprequestsService = new ToprequestsService(this.ctx);
   }
 
   public async updatePost() {
-    const {
+    let {
       postId,
       userType,
       userId,
@@ -30,10 +33,13 @@ export default class PostController {
       nickName,
       postImg,
       state,
+      creationTime,
     } = this.ctx.request.body as updatePost;
 
-    const creationTime = new Date();
-    creationTime.setSeconds(creationTime.getSeconds() - 1);
+    if (!creationTime) {
+      creationTime = new Date();
+      creationTime?.setSeconds(creationTime.getSeconds() - 1);
+    }
 
     if (postId) {
       const res = await this._postsService.updatePost({
@@ -47,7 +53,6 @@ export default class PostController {
         nickName,
         state,
       });
-      return res;
     } else {
       const res = await this._postsService.updatePost({
         userType,
@@ -59,8 +64,12 @@ export default class PostController {
         nickName,
         state,
       });
-      return res;
+      postId = res.postId;
     }
+
+    const res = await this._postsService.getPostByPostId(postId);
+
+    return res;
   }
 
   public async reviewPost() {
@@ -252,5 +261,58 @@ export default class PostController {
     } else {
       this.ctx.status = 400;
     }
+  }
+
+  public async applyForTop() {
+    const { postId, userId, userType, endTime } = this.ctx.request.body as {
+      postId: number;
+      userId: string;
+      userType: string;
+      endTime: Date;
+    };
+
+    const creationTime = new Date();
+    creationTime.setSeconds(creationTime.getSeconds() - 1);
+
+    const res = await this._toprequestsService.addTopRequests(
+      postId,
+      userId,
+      userType,
+      creationTime,
+      endTime
+    );
+
+    return res;
+  }
+
+  public async setTop() {
+    const { requestId, adminId, endTime, state } = this.ctx.request.body as {
+      requestId: number;
+      adminId: number;
+      endTime: Date;
+      state: number;
+    };
+
+    const res = await this._toprequestsService.setTop(
+      requestId,
+      adminId,
+      state,
+      endTime
+    );
+
+    return res;
+  }
+
+  public async getTopPostIds() {
+    const res = await this._toprequestsService.getTopRequests();
+
+    res.filter((item) => {
+      return item.state === 1 && item.endTime > new Date();
+
+    });
+
+    return res.map((item) => {
+      return item.postId;
+    });
   }
 }

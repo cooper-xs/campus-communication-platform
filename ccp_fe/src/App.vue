@@ -1,6 +1,11 @@
 <template>
   <RouterView class="h-screen w-screen" />
+  <!-- <MainPage class="h-screen w-screen"/> -->
 </template>
+
+<script setup lang="ts">
+// import MainPage from './views/MainPage.vue';
+</script>
 
 <style lang="less">
 body {
